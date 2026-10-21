@@ -33,6 +33,12 @@ import {
   MapPin,
   Search,
   Cloud,
+  Maximize2,
+  Minimize2,
+  Zap,
+  TrendingUp,
+  Compass,
+  Award,
 } from "lucide-react";
 import Papa from "papaparse";
 import { supabase } from "@/lib/supabase";
@@ -50,6 +56,119 @@ import {
   type Round,
   type HoleScore,
 } from "@/lib/golf";
+
+// Currahee par values and stroke indexes for 18 holes (par 72)
+const CURRAHEE_PARS = [4, 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 4, 4, 3, 5];
+const CURRAHEE_STROKE_INDEX = [3, 13, 15, 17, 7, 9, 1, 5, 11, 4, 2, 18, 6, 12, 14, 10, 16, 8];
+
+// Calculate player's extra handicap strokes received on a hole
+function getHoleHandicapStrokes(handicap: number, strokeIndex: number): number {
+  const rounded = Math.round(handicap);
+  if (rounded <= 0) return 0;
+  let strokes = Math.floor(rounded / 18);
+  const remainder = rounded % 18;
+  if (strokeIndex <= remainder) strokes += 1;
+  return strokes;
+}
+
+// Simulated live GSPro in-progress round data (6 holes completed)
+// Round 1 format: 2v2 Scramble (Team vs Team, 1 team score per hole)
+// 2-person scramble handicap allowance: 35% low handicap + 15% high handicap
+// Match play off the low team: lowest team plays off scratch (0 shots given),
+// and the higher team receives the difference in strokes.
+const rawTeamAHandicap = 7; // (0.35 * 10.3) + (0.15 * 25.1) = 7.37 -> 7
+const rawTeamBHandicap = 2; // (0.35 * 2.6) + (0.15 * 9.0) = 2.26 -> 2
+const lowTeamHandicap = Math.min(rawTeamAHandicap, rawTeamBHandicap); // 2
+
+const simulatedLiveRound = {
+  active: true,
+  tournamentId: demo.id,
+  roundNumber: 1,
+  courseId: "currahee",
+  holesCompleted: 6,
+  matchState: "Brian & John 1 UP thru 6",
+  formatName: "2v2 Best Ball Scramble",
+  teams: [
+    {
+      id: "team-a",
+      name: "Team A",
+      playerIds: ["brian", "john"],
+      rawHandicap: rawTeamAHandicap, // 7
+      matchPlayAllowance: rawTeamAHandicap - lowTeamHandicap, // 7 - 2 = 5 strokes received
+      scores: [
+        { hole: 1, strokes: 4 }, // birdie (hole 1 is par 5)
+        { hole: 2, strokes: 3 }, // par (par 3)
+        { hole: 3, strokes: 4 }, // par (par 4)
+        { hole: 4, strokes: 3 }, // par (par 3)
+        { hole: 5, strokes: 4 }, // birdie (hole 5 is par 5)
+        { hole: 6, strokes: 4 }, // par (par 4)
+      ],
+    },
+    {
+      id: "team-b",
+      name: "Team B",
+      playerIds: ["derek", "tony"],
+      rawHandicap: rawTeamBHandicap, // 2
+      matchPlayAllowance: rawTeamBHandicap - lowTeamHandicap, // 2 - 2 = 0 (scratch)
+      scores: [
+        { hole: 1, strokes: 5 }, // par (hole 1 is par 5)
+        { hole: 2, strokes: 3 }, // par (par 3)
+        { hole: 3, strokes: 4 }, // par (par 4)
+        { hole: 4, strokes: 2 }, // birdie (par 3)
+        { hole: 5, strokes: 5 }, // par (hole 5 is par 5)
+        { hole: 6, strokes: 4 }, // par (par 4)
+      ],
+    },
+  ],
+  // Live player telemetry directly capturable from GSPro Open Connect (BallData / Launch Monitor & shot tracking)
+  telemetry: {
+    longestDrive: {
+      playerId: "tony",
+      distance: 294,
+      ballSpeed: 167.4,
+      hole: 5,
+      fairway: true,
+    },
+    playerStats: [
+      {
+        playerId: "brian",
+        avgDrive: 226,
+        fairwaysHit: "3/4",
+        shotShape: "Fade (Push)",
+        launchAngle: "14.2°",
+        ballSpeedAvg: "138 mph",
+        clutchPutts: 1,
+      },
+      {
+        playerId: "john",
+        avgDrive: 248,
+        fairwaysHit: "4/4",
+        shotShape: "Straight / Slight Draw",
+        launchAngle: "12.8°",
+        ballSpeedAvg: "151 mph",
+        clutchPutts: 2,
+      },
+      {
+        playerId: "derek",
+        avgDrive: 254,
+        fairwaysHit: "3/4",
+        shotShape: "Baby Draw",
+        launchAngle: "11.9°",
+        ballSpeedAvg: "155 mph",
+        clutchPutts: 1,
+      },
+      {
+        playerId: "tony",
+        avgDrive: 288,
+        fairwaysHit: "4/4",
+        shotShape: "High Power Fade",
+        launchAngle: "11.1°",
+        ballSpeedAvg: "166 mph",
+        clutchPutts: 2,
+      },
+    ],
+  },
+};
 const date = (s: string) =>
   new Date(s + "T12:00:00").toLocaleDateString("en-GB", {
     day: "numeric",
@@ -68,6 +187,7 @@ export default function Clubhouse({ route }: { route: ClubhouseRoute }) {
   const [notice, setNotice] = useState("");
   const [user, setUser] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [fullscreenScorecard, setFullscreenScorecard] = useState(false);
   useEffect(() => {
     if (supabase) {
       supabase.auth
@@ -237,48 +357,392 @@ export default function Clubhouse({ route }: { route: ClubhouseRoute }) {
                 <Plus size={17} /> New tournament
               </button>
             </div>
-            <section
-              className="hero"
-              style={{
-                backgroundImage: `linear-gradient(90deg,rgba(10,37,26,.91),rgba(10,37,26,.25)),url('${featuredCourse?.image ?? "/images/course.jpg"}')`,
-              }}
-            >
-              <div className="hero-copy">
-                <div className="eyebrow gold">
-                  <span className="live-dot" /> YOUR NEXT ROUND AWAITS
+            {simulatedLiveRound?.active ? (
+              <section
+                className={`live-scorecard-hero ${fullscreenScorecard ? "fullscreen" : ""}`}
+              >
+                <div className="live-scorecard-header">
+                  <div className="live-scorecard-title-group">
+                    {!fullscreenScorecard && (
+                      <div className="eyebrow gold">
+                        <span className="live-dot" /> LIVE FROM GSPRO · ROUND{" "}
+                        {simulatedLiveRound.roundNumber} IN PROGRESS
+                      </div>
+                    )}
+                    <div className="live-title-row">
+                      <h2>
+                        {courses.find((c) => c.id === simulatedLiveRound.courseId)?.name ?? "Currahee Golf Club"}
+                      </h2>
+                      {fullscreenScorecard && (
+                        <span className="live-match-badge">
+                          <span className="live-dot" /> {simulatedLiveRound.matchState}
+                        </span>
+                      )}
+                    </div>
+                    <div className="live-meta">
+                      <span>{courses.find((c) => c.id === simulatedLiveRound.courseId)?.location}</span>
+                      <span>·</span>
+                      <span>Par {courses.find((c) => c.id === simulatedLiveRound.courseId)?.par ?? 72}</span>
+                      <span>·</span>
+                      <span>{simulatedLiveRound.formatName}</span>
+                      {!fullscreenScorecard && (
+                        <span className="live-match-badge">
+                          {simulatedLiveRound.matchState}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="live-scorecard-actions">
+                    <button
+                      type="button"
+                      className="button outline icon-only live-fullscreen-btn"
+                      onClick={() => setFullscreenScorecard(!fullscreenScorecard)}
+                      aria-label={fullscreenScorecard ? "Exit fullscreen" : "Enter fullscreen"}
+                      title={fullscreenScorecard ? "Exit fullscreen (Esc)" : "Enter fullscreen"}
+                    >
+                      {fullscreenScorecard ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+                    </button>
+                    {!fullscreenScorecard && (
+                      <>
+                        <Link
+                          className="button outline"
+                          href={tournamentHref(tournaments[0]?.id ?? demo.id, "Schedule")}
+                        >
+                          Round Details
+                        </Link>
+                        <Link
+                          className="button primary"
+                          href={tournamentHref(tournaments[0]?.id ?? demo.id)}
+                        >
+                          Tournament Hub <ArrowUpRight size={15} />
+                        </Link>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <h2>
-                  Same four.
-                  <br />
-                  New fairways.
-                </h2>
-                <p>
-                  The best part of the week starts on the first tee.
-                  <br />
-                  Pick up where your last round left off.
-                </p>
-                <Link
-                  className="button cream"
-                  href={
-                    tournaments[0] ? tournamentHref(tournaments[0].id) : "/"
-                  }
-                >
-                  Enter the tournament <ArrowUpRight size={17} />
-                </Link>
-              </div>
-              <div className="hero-stamp">
-                <Flag size={28} />
-                <span>
-                  THE GAME
-                  <br />
-                  BRINGS US TOGETHER
-                </span>
-                <small>EST. 2026</small>
-              </div>
-              <div className="hero-caption">
-                THE SPIRIT OF THE GAME, BROUGHT INDOORS <span>01 — 03</span>
-              </div>
-            </section>
+
+                <div className="live-scorecard-table-wrap">
+                  <table className="live-scorecard-table">
+                    <colgroup>
+                      <col className="live-col-player" />
+                      {Array.from({ length: 18 }, (_, i) => (
+                        <col key={i} className="live-col-hole" />
+                      ))}
+                      <col className="live-col-stat" />
+                      <col className="live-col-stat" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th className="live-score-player-col">PAIRING / TEAM</th>
+                        {Array.from({ length: 18 }, (_, i) => (
+                          <th key={i} className="live-score-th">
+                            <div className="live-th-hole">
+                              <span className="live-th-num">{i + 1}</span>
+                              <span className="live-th-si">SI {CURRAHEE_STROKE_INDEX[i]}</span>
+                            </div>
+                          </th>
+                        ))}
+                        <th className="live-total-col">TOT</th>
+                        <th className="live-to-par">+/-</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {simulatedLiveRound.teams.map((team) => {
+                        const tournamentPlayers = (tournaments[0] ?? demo).players;
+                        const pairPlayers = team.playerIds
+                          .map((id) => tournamentPlayers.find((p) => p.id === id))
+                          .filter(Boolean);
+
+                        const totalStrokes = team.scores.reduce(
+                          (acc, s) => acc + s.strokes,
+                          0,
+                        );
+                        const completedPars = team.scores.reduce((acc, s) => {
+                          const par = CURRAHEE_PARS[s.hole - 1] ?? 4;
+                          return acc + par;
+                        }, 0);
+                        const diff = totalStrokes - completedPars;
+                        const diffLabel =
+                          team.scores.length === 0
+                            ? "E"
+                            : diff === 0
+                              ? "E"
+                              : diff > 0
+                                ? `+${diff}`
+                                : `${diff}`;
+
+                        return (
+                          <tr key={team.id}>
+                            <td className="live-score-player-col">
+                              <div className="live-team-scramble-cell">
+                                <div className="live-team-avatars">
+                                  {pairPlayers.map((p) => (
+                                    <PlayerAvatar
+                                      key={p!.id}
+                                      name={p!.name}
+                                      className="small"
+                                    />
+                                  ))}
+                                </div>
+                                <div className="live-team-info">
+                                  <div className="live-team-row-top">
+                                    <span className="live-team-title">
+                                      {team.name}
+                                    </span>
+                                    <span
+                                      className="live-team-hcp-pill"
+                                      title={`Team scramble handicap: ${team.rawHandicap}. Match allowance (off low team): ${team.matchPlayAllowance > 0 ? `+${team.matchPlayAllowance} strokes` : "Scratch (0)"}`}
+                                    >
+                                      {team.matchPlayAllowance > 0
+                                        ? `+${team.matchPlayAllowance} SHOTS`
+                                        : "SCRATCH"}
+                                    </span>
+                                  </div>
+                                  <div className="live-team-pair-names">
+                                    {pairPlayers.map((p) => p!.name.split(" ")[0]).join(" & ")}
+                                    <span style={{ fontSize: "10px", color: "#8a9482", marginLeft: "5px" }}>
+                                      (HCP {team.rawHandicap})
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            {Array.from({ length: 18 }, (_, i) => {
+                              const holeNum = i + 1;
+                              const scoreObj = team.scores.find(
+                                (s) => s.hole === holeNum,
+                              );
+                              const par = CURRAHEE_PARS[i] ?? 4;
+                              const strokeIndex = CURRAHEE_STROKE_INDEX[i];
+                              const extraStrokes = getHoleHandicapStrokes(
+                                team.matchPlayAllowance,
+                                strokeIndex,
+                              );
+
+                              if (!scoreObj) {
+                                return (
+                                  <td key={i} className="live-score-cell">
+                                    <div className="live-cell-container">
+                                      {extraStrokes > 0 && (
+                                        <span
+                                          className="live-hcp-dots"
+                                          title={`+${extraStrokes} handicap stroke${extraStrokes > 1 ? "s" : ""}`}
+                                        >
+                                          {"•".repeat(extraStrokes)}
+                                        </span>
+                                      )}
+                                      <span className="live-score-empty">—</span>
+                                    </div>
+                                  </td>
+                                );
+                              }
+                              const scoreDiff = scoreObj.strokes - par;
+                              const badgeClass =
+                                scoreDiff <= -1
+                                  ? "birdie"
+                                  : scoreDiff === 1
+                                    ? "bogey"
+                                    : scoreDiff >= 2
+                                      ? "double-bogey"
+                                      : "par";
+                              return (
+                                <td key={i} className="live-score-cell">
+                                  <div className="live-cell-container">
+                                    {extraStrokes > 0 && (
+                                      <span
+                                        className="live-hcp-dots"
+                                        title={`+${extraStrokes} handicap stroke${extraStrokes > 1 ? "s" : ""}`}
+                                      >
+                                        {"•".repeat(extraStrokes)}
+                                      </span>
+                                    )}
+                                    <span className={`live-score-val ${badgeClass}`}>
+                                      {scoreObj.strokes}
+                                    </span>
+                                  </div>
+                                </td>
+                              );
+                            })}
+                            <td className="live-total-col">
+                              {team.scores.length > 0 ? totalStrokes : "—"}
+                            </td>
+                            <td
+                              className={`live-to-par ${diff < 0 ? "under" : diff > 0 ? "over" : ""}`}
+                            >
+                              {team.scores.length > 0 ? diffLabel : "—"}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="live-scorecard-footer">
+                  <div>
+                    <div className="live-legend">
+                      <span className="live-legend-item">
+                        <span className="legend-pill birdie">○</span> Birdie / Better
+                      </span>
+                      <span className="live-legend-item">
+                        <span className="legend-pill">4</span> Par
+                      </span>
+                      <span className="live-legend-item">
+                        <span className="legend-pill bogey">□</span> Bogey
+                      </span>
+                      <span className="live-legend-item">
+                        <span className="legend-pill double-bogey">⧈</span> Double+
+                      </span>
+                      <span className="live-legend-item">
+                        <span style={{ color: "#7d4833", fontWeight: 800 }}>•</span> Stroke given
+                      </span>
+                    </div>
+                    <div className="live-hcp-calc-explainer">
+                      <strong>Handicap allowance:</strong> 35% low HCP + 15% high HCP played off lowest team. Team A (7) − Team B (2) = <strong>5 strokes given to Team A</strong> (on SI 1–5). Team B plays off Scratch.
+                    </div>
+                  </div>
+                  <div>
+                    Simulator connected · Auto-refreshing stroke telemetry
+                  </div>
+                </div>
+
+                {fullscreenScorecard && (
+                  <>
+                    <div className="fullscreen-dashboard-grid">
+                      <div className="fullscreen-stat-card">
+                        <span className="fullscreen-stat-label">
+                          <Target size={14} /> MATCH STANDING
+                        </span>
+                        <div className="fullscreen-stat-value">Team A 1 UP</div>
+                        <div className="fullscreen-stat-sub">
+                          Holes remaining: 12 · Maximum points remaining: 3
+                        </div>
+                      </div>
+                      <div className="fullscreen-stat-card">
+                        <span className="fullscreen-stat-label">
+                          <Zap size={14} style={{ color: "#d19a3b" }} /> LONGEST DRIVE OF ROUND
+                        </span>
+                        <div className="fullscreen-stat-value">
+                          {simulatedLiveRound.telemetry.longestDrive.distance} YDS
+                        </div>
+                        <div className="fullscreen-stat-sub">
+                          {tournaments[0]?.players.find((p) => p.id === simulatedLiveRound.telemetry.longestDrive.playerId)?.name ?? "Tony McLean"} · Hole {simulatedLiveRound.telemetry.longestDrive.hole} ({simulatedLiveRound.telemetry.longestDrive.ballSpeed} mph ball speed)
+                        </div>
+                      </div>
+                      <div className="fullscreen-stat-card">
+                        <span className="fullscreen-stat-label">
+                          <Flag size={14} /> ON THE TEE (HOLE 7)
+                        </span>
+                        <div className="fullscreen-stat-value">Par 4 · 420 YDS</div>
+                        <div className="fullscreen-stat-sub">
+                          Stroke Index 1 · Team A receives 1 handicap stroke
+                        </div>
+                      </div>
+                      <div className="fullscreen-stat-card">
+                        <span className="fullscreen-stat-label">
+                          <Compass size={14} /> COURSE CONDITIONS
+                        </span>
+                        <div className="fullscreen-stat-value">Fairways Firm · Stimp 11</div>
+                        <div className="fullscreen-stat-sub">
+                          Wind: 6 mph SW · Currahee Club, Georgia
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="fullscreen-telemetry-row">
+                      <div className="fullscreen-telemetry-card">
+                        <div className="fullscreen-card-head">
+                          <h3>
+                            <TrendingUp size={16} /> Live Player Telemetry & Shot Shape Trends
+                          </h3>
+                          <span className="live-team-badge">GSPro Launch Telemetry</span>
+                        </div>
+                        <div className="fullscreen-telemetry-grid">
+                          {simulatedLiveRound.telemetry.playerStats.map((stat) => {
+                            const playerObj = (tournaments[0] ?? demo).players.find(
+                              (p) => p.id === stat.playerId,
+                            );
+                            return (
+                              <div className="player-telemetry-box" key={stat.playerId}>
+                                <div className="player-telemetry-head">
+                                  <PlayerAvatar name={playerObj?.name ?? stat.playerId} className="small" />
+                                  <div>
+                                    <div className="player-telemetry-name">{playerObj?.name}</div>
+                                    <span className="telemetry-shape-pill">{stat.shotShape}</span>
+                                  </div>
+                                </div>
+                                <div className="player-telemetry-metrics">
+                                  <div className="telemetry-metric">
+                                    <span className="metric-label">Avg Drive</span>
+                                    <span className="metric-val">{stat.avgDrive} yds</span>
+                                  </div>
+                                  <div className="telemetry-metric">
+                                    <span className="metric-label">Ball Speed</span>
+                                    <span className="metric-val">{stat.ballSpeedAvg}</span>
+                                  </div>
+                                  <div className="telemetry-metric">
+                                    <span className="metric-label">Fairways</span>
+                                    <span className="metric-val">{stat.fairwaysHit}</span>
+                                  </div>
+                                  <div className="telemetry-metric">
+                                    <span className="metric-label">Launch</span>
+                                    <span className="metric-val">{stat.launchAngle}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="fullscreen-extras-row">
+                      <div className="fullscreen-extra-card">
+                        <div className="fullscreen-card-head">
+                          <h3>
+                            <Target size={16} /> Closest to the Pin (In Progress)
+                          </h3>
+                          <span className="live-team-badge">2 Contests</span>
+                        </div>
+                        <div className="fullscreen-pins-list">
+                          <div className="fullscreen-pin-item">
+                            <span className="fullscreen-pin-hole">Hole 2 (Par 3, 168 yds)</span>
+                            <span className="fullscreen-pin-leader">Tony McLean (Team B)</span>
+                            <span className="fullscreen-pin-dist">4 ft 8 in</span>
+                          </div>
+                          <div className="fullscreen-pin-item">
+                            <span className="fullscreen-pin-hole">Hole 17 (Par 3, 192 yds)</span>
+                            <span className="fullscreen-pin-leader">Upcoming</span>
+                            <span className="fullscreen-pin-dist" style={{ opacity: 0.6 }}>—</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="fullscreen-extra-card">
+                        <div className="fullscreen-card-head">
+                          <h3>
+                            <CheckCircle2 size={16} /> Hole-by-Hole Match Status
+                          </h3>
+                          <span className="live-team-badge">Thru Hole 6</span>
+                        </div>
+                        <div className="fullscreen-pins-list">
+                          <div className="fullscreen-pin-item">
+                            <span>Holes 1–3</span>
+                            <span style={{ fontWeight: 600 }}>Team A win Hole 1 · Halved 2 & 3</span>
+                            <span className="fullscreen-pin-dist">Team A 1 UP</span>
+                          </div>
+                          <div className="fullscreen-pin-item">
+                            <span>Holes 4–6</span>
+                            <span style={{ fontWeight: 600 }}>Team B win Hole 4 · Team A win Hole 5 · Halved 6</span>
+                            <span className="fullscreen-pin-dist">Team A 1 UP</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </section>
+            ) : null}
             <div className="stats-strip">
               <div>
                 <Trophy />
