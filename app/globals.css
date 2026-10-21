@@ -2545,6 +2545,21 @@ main > .wide-panel {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
 }
 
+/* Fullscreen Lower Half: Dashboard Grid & Battle Graph */
+.fullscreen-lower-half {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 14px;
+}
+.fullscreen-lower-half .fullscreen-dashboard-grid {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.fullscreen-lower-half .battle-chart-card {
+  margin-top: 0;
+}
+
 /* Fullscreen Dashboard Grid */
 .fullscreen-dashboard-grid {
   display: grid;
@@ -2575,6 +2590,12 @@ main > .wide-panel {
   font-size: 20px;
   font-weight: 700;
   color: #173824;
+}
+.fullscreen-stat-carry {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6a7767;
+  letter-spacing: normal;
 }
 .fullscreen-stat-sub {
   font-size: 11px;
@@ -2735,5 +2756,1537 @@ main > .wide-panel {
   .fullscreen-dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* GSPro Live Status Banner */
+.live-status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.live-status-banner.active {
+  background: #f4faf6;
+  border-color: #a3d9b8;
+}
+.live-status-banner.idle {
+  background: #fafaf8;
+  border-color: #e5e7eb;
+}
+.live-status-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.live-status-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.live-status-pulse.active {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  animation: pulse-green 2s infinite ease-in-out;
+}
+.live-status-pulse.idle {
+  background: #9ca3af;
+}
+.live-status-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
+.live-status-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+.live-pulse-icon {
+  color: #10b981;
+  animation: pulse-green 1.8s infinite;
+}
+@keyframes pulse-green {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Fullscreen Hole Distances, Par & Active Highlight */
+.live-scorecard-table .active-hole-col {
+  background: rgba(220, 240, 226, 0.55) !important;
+  position: relative;
+}
+.live-scorecard-table th.active-hole-col {
+  background: rgba(197, 230, 208, 0.75) !important;
+}
+.live-th-dist {
+  font-size: 9px;
+  font-weight: 500;
+  color: #6a7465;
+  letter-spacing: 0.2px;
+}
+.live-th-par {
+  font-size: 8px;
+  font-weight: 700;
+  color: #123f31;
+  background: rgba(18, 63, 49, 0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-top: 1px;
+}
+.active-hole-badge {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  font-weight: 800;
+  color: #15803d;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  padding: 0 3px;
+  border-radius: 2px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+/* Masters / Augusta Iconic Green Theme for Scorecard */
+.masters-scorecard-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #0d3829;
+  box-shadow: 0 4px 16px rgba(10, 46, 34, 0.08);
+  background: #ffffff;
+}
+.masters-scorecard-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: inherit;
+  table-layout: fixed;
+}
+.masters-scorecard-table th,
+.masters-scorecard-table td {
+  padding: 0 !important;
+  text-align: center !important;
+  border-right: 1px solid #134e3a !important;
+  border-bottom: 1px solid #134e3a !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+}
+.masters-scorecard-table th:last-child,
+.masters-scorecard-table td:last-child {
+  border-right: none !important;
+}
+.masters-scorecard-table thead tr.masters-row-holes th {
+  background: #0b4d37 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  height: 42px !important;
+  letter-spacing: 0.2px;
+}
+.masters-hole-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.15;
+}
+.masters-hole-num {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+.masters-hole-si {
+  font-size: 8.5px;
+  font-weight: 700;
+  color: #a7f3d0;
+  letter-spacing: 0.3px;
+}
+.masters-label-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.15;
+}
+.masters-label-si {
+  font-size: 9px;
+  font-weight: 600;
+  color: #a7f3d0;
+  letter-spacing: 0.3px;
+}
+.masters-scorecard-table thead tr.masters-row-dist th {
+  background: #0d4633 !important;
+  color: #d1e7dd !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  height: 26px !important;
+}
+.masters-scorecard-table thead tr.masters-row-par th {
+  background: #083c2b !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  height: 38px !important;
+}
+.masters-scorecard-table thead th.masters-label-col {
+  text-align: left !important;
+  padding-left: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+}
+.masters-scorecard-table thead tr.masters-row-holes th.masters-label-col {
+  background: #0b4d37 !important;
+  color: #ffffff !important;
+}
+.masters-scorecard-table thead tr.masters-row-dist th.masters-label-col {
+  background: #0d4633 !important;
+  color: #d1e7dd !important;
+}
+.masters-scorecard-table thead tr.masters-row-par th.masters-label-col {
+  background: #083c2b !important;
+  color: #ffffff !important;
+}
+.masters-scorecard-table tbody td {
+  border-right: 1px solid #e5eae3 !important;
+  border-bottom: 1px solid #e5eae3 !important;
+  background: #ffffff;
+  height: 52px;
+}
+.masters-scorecard-table tbody td.live-score-player-col {
+  background: #ffffff;
+  border-right: 1px solid #e0e6de !important;
+  text-align: left !important;
+  padding-left: 14px !important;
+}
+.masters-scorecard-table th.active-hole-col {
+  background: #0f6146 !important;
+  box-shadow: inset 0 0 0 1px #34d399;
+}
+.masters-scorecard-table td.active-hole-col {
+  background: #f0fdf4 !important;
+}
+.masters-scorecard-table th.masters-tot-col {
+  background: #062e21 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+.masters-scorecard-table td.masters-tot-col {
+  background: #f7faf7 !important;
+  font-weight: 700 !important;
+  color: #0b4d37 !important;
+}
+/* Masters Style Score Rings */
+.masters-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0b4d37;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  line-height: 1;
+}
+.masters-val.par {
+  color: #0b4d37;
+}
+.masters-val.birdie {
+  border: 1.5px solid #0b4d37;
+  border-radius: 50%;
+  color: #0b4d37;
+  background: transparent;
+}
+.masters-val.eagle {
+  border: 1.5px solid #0b4d37;
+  outline: 1.5px solid #0b4d37;
+  outline-offset: 1.5px;
+  border-radius: 50%;
+  color: #0b4d37;
+}
+.masters-val.bogey {
+  border: 1.5px solid #0b4d37;
+  border-radius: 2px;
+  color: #0b4d37;
+  background: transparent;
+}
+.masters-val.double-bogey {
+  border: 1.5px solid #0b4d37;
+  outline: 1.5px solid #0b4d37;
+  outline-offset: 1.5px;
+  border-radius: 2px;
+  color: #0b4d37;
+}
+.masters-active-pill {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 800;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.2);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 12px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* Traditional GSPro / Golf Score Indicators (Red Circle Birdie, Blue Square Bogey) */
+.masters-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  line-height: 1;
+}
+.masters-val.par {
+  color: #374151;
+}
+.masters-val.birdie {
+  border: 2px solid #dc2626 !important;
+  border-radius: 50% !important;
+  color: #b91c1c !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+.masters-val.eagle {
+  border: 2px solid #dc2626 !important;
+  outline: 1.5px solid #dc2626 !important;
+  outline-offset: 1.5px !important;
+  border-radius: 50% !important;
+  color: #b91c1c !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+}
+.masters-val.bogey {
+  border: 2px solid #2563eb !important;
+  border-radius: 3px !important;
+  color: #1d4ed8 !important;
+  background: rgba(37, 99, 235, 0.06) !important;
+}
+.masters-val.double-bogey {
+  border: 2px solid #1e40af !important;
+  outline: 1.5px solid #1e40af !important;
+  outline-offset: 1.5px !important;
+  border-radius: 3px !important;
+  color: #1e3a8a !important;
+  background: rgba(30, 64, 175, 0.08) !important;
+}
+
+/* Elegant Masters Gold Accent for Active Hole */
+.masters-scorecard-table thead tr.masters-row-holes th.active-hole-col {
+  background: #083c2b !important;
+  color: #fbbf24 !important;
+  box-shadow: inset 0 3px 0 #d97706, inset 1px 0 0 rgba(217, 119, 6, 0.4), inset -1px 0 0 rgba(217, 119, 6, 0.4) !important;
+  position: relative;
+}
+.masters-scorecard-table thead tr.masters-row-dist th.active-hole-col {
+  background: #073526 !important;
+  color: #fef3c7 !important;
+  box-shadow: inset 1px 0 0 rgba(217, 119, 6, 0.4), inset -1px 0 0 rgba(217, 119, 6, 0.4) !important;
+}
+.masters-scorecard-table thead tr.masters-row-par th.active-hole-col {
+  background: #052a1e !important;
+  color: #fbbf24 !important;
+  box-shadow: inset 1px 0 0 rgba(217, 119, 6, 0.4), inset -1px 0 0 rgba(217, 119, 6, 0.4), inset 0 -2px 0 #d97706 !important;
+}
+.masters-scorecard-table tbody td.active-hole-col {
+  background: #fbf8ee !important;
+  box-shadow: inset 1px 0 0 rgba(217, 119, 6, 0.25), inset -1px 0 0 rgba(217, 119, 6, 0.25) !important;
+}
+.masters-scorecard-table tbody tr:last-child td.active-hole-col {
+  box-shadow: inset 1px 0 0 rgba(217, 119, 6, 0.25), inset -1px 0 0 rgba(217, 119, 6, 0.25), inset 0 -2px 0 rgba(217, 119, 6, 0.4) !important;
+}
+.masters-active-pill {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 800;
+  color: #78350f !important;
+  background: #fef3c7 !important;
+  border: 1px solid #f59e0b !important;
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 12px;
+  margin-left: 4px;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Legend Sample Icons (Pure bordered shapes without internal numbers/glyphs) */
+.legend-shape {
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: middle;
+  background: transparent;
+}
+.legend-shape.birdie {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #dc2626;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.08);
+}
+.legend-shape.eagle {
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #dc2626;
+  outline: 1.5px solid #dc2626;
+  outline-offset: 1px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.1);
+}
+.legend-shape.bogey {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid #2563eb;
+  border-radius: 2px;
+  background: rgba(37, 99, 235, 0.06);
+}
+.legend-shape.double-bogey {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #1e40af;
+  outline: 1.5px solid #1e40af;
+  outline-offset: 1px;
+  border-radius: 2px;
+  background: rgba(30, 64, 175, 0.08);
+}
+
+/* GSPro Scorecard Colors: Birdie/Eagle in BLUE, Bogey/Double in RED */
+.masters-val.birdie {
+  border: 2px solid #2563eb !important;
+  border-radius: 50% !important;
+  color: #1d4ed8 !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+}
+.masters-val.eagle {
+  border: 2px solid #2563eb !important;
+  outline: 1.5px solid #2563eb !important;
+  outline-offset: 1.5px !important;
+  border-radius: 50% !important;
+  color: #1d4ed8 !important;
+  background: rgba(37, 99, 235, 0.12) !important;
+}
+.masters-val.bogey {
+  border: 2px solid #dc2626 !important;
+  border-radius: 3px !important;
+  color: #b91c1c !important;
+  background: rgba(239, 68, 68, 0.06) !important;
+}
+.masters-val.double-bogey {
+  border: 2px solid #b91c1c !important;
+  outline: 1.5px solid #b91c1c !important;
+  outline-offset: 1.5px !important;
+  border-radius: 3px !important;
+  color: #991b1b !important;
+  background: rgba(185, 28, 28, 0.08) !important;
+}
+.legend-shape.birdie {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #2563eb !important;
+  border-radius: 50% !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+}
+.legend-shape.eagle {
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #2563eb !important;
+  outline: 1.5px solid #2563eb !important;
+  outline-offset: 1px !important;
+  border-radius: 50% !important;
+  background: rgba(37, 99, 235, 0.12) !important;
+}
+.legend-shape.bogey {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid #dc2626 !important;
+  border-radius: 2px !important;
+  background: rgba(239, 68, 68, 0.06) !important;
+}
+.legend-shape.double-bogey {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #b91c1c !important;
+  outline: 1.5px solid #b91c1c !important;
+  outline-offset: 1px !important;
+  border-radius: 2px !important;
+  background: rgba(185, 28, 28, 0.08) !important;
+}
+
+/* Fullscreen Award Card with Player/Team Avatars */
+.fullscreen-award-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.fullscreen-award-avatars {
+  display: flex;
+  align-items: center;
+}
+.fullscreen-award-avatars .avatar {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 11px !important;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.fullscreen-award-avatars .avatar + .avatar {
+  margin-left: -8px;
+}
+.fullscreen-award-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.fullscreen-award-winner {
+  font-size: 12px;
+  font-weight: 700;
+  color: #173824;
+}
+.fullscreen-award-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: #6a7767;
+}
+
+/* Match Progress Timeline & Momentum Chart */
+.match-timeline-card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+.match-timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.match-timeline-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #123f31;
+}
+.match-timeline-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.match-timeline-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.timeline-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.timeline-dot.team-a {
+  background: #0b4d37;
+}
+.timeline-dot.team-b {
+  background: #2563eb;
+}
+.match-chart-container {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.match-timeline-svg {
+  width: 100%;
+  min-width: 650px;
+  height: 180px;
+  display: block;
+}
+.timeline-hole-axis {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  text-align: center;
+  margin-top: 8px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 6px;
+  min-width: 650px;
+}
+.timeline-hole-tick {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+}
+.timeline-hole-tick.active {
+  color: #0b4d37;
+  font-weight: 800;
+}
+
+/* Dual-Team Head-to-Head Battle Progress Chart */
+.battle-chart-card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 18px 8px;
+  margin-top: 0;
+  box-shadow: 0 4px 14px rgba(10, 46, 34, 0.05);
+}
+.battle-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.battle-chart-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #123f31;
+}
+.battle-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.battle-legend-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+.battle-legend-pill.team-a {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1.5px solid #a7f3d0;
+}
+.battle-legend-pill.team-b {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1.5px solid #bfdbfe;
+}
+.battle-legend-line {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+}
+.battle-legend-line.team-a {
+  background: #0b4d37;
+}
+.battle-legend-line.team-b {
+  background: #2563eb;
+}
+
+/* Battle Mode Toggle */
+.battle-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.battle-mode-toggle {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.battle-mode-btn {
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.battle-mode-btn:hover {
+  color: #0f172a;
+}
+.battle-mode-btn.active {
+  background: #ffffff;
+  color: #0b4d37;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Battle SVG Chart */
+.battle-svg-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.battle-svg {
+  width: 100%;
+  min-width: 680px;
+  height: auto;
+  aspect-ratio: 840 / 198;
+  display: block;
+}
+
+
+/* Battle & Live Standings 4-Column Layout */
+.battle-standings-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.battle-standings-row .battle-chart-card {
+  grid-column: span 3;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.battle-standings-row .live-standings-card {
+  grid-column: span 1;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px 10px;
+  box-shadow: 0 2px 10px rgba(10, 46, 34, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.live-standings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 6px;
+}
+.live-standings-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #123f31;
+}
+.live-standings-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 1px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+.live-standings-badge .live-pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+}
+.live-standings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+.live-standings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+.live-standings-row.leader {
+  background: #f8fafc;
+}
+.live-standings-player-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.live-rank-num {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  width: 14px;
+  text-align: center;
+}
+.live-rank-num.gold {
+  color: #b45309;
+}
+.live-rank-num.silver {
+  color: #475569;
+}
+.live-rank-num.bronze {
+  color: #92400e;
+}
+.live-player-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.live-player-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.live-player-breakdown {
+  font-size: 9px;
+  font-weight: 600;
+  color: #059669;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.live-standings-pts-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.live-pts-gain {
+  font-size: 10px;
+  font-weight: 800;
+  color: #065f46;
+  background: #dcfce7;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.live-total-pts {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.live-total-pts .pts-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: #64748b;
+}
+.live-standings-rules {
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 6px;
+  margin-top: 4px;
+  text-align: center;
+}
+@media (max-width: 1024px) {
+  .battle-standings-row {
+    grid-template-columns: 1fr;
+  }
+  .battle-standings-row .battle-chart-card,
+  .battle-standings-row .live-standings-card {
+    grid-column: span 1;
+  }
+}
+
+
+/* Battle & Live Standings 4-Column Layout */
+.battle-standings-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.battle-standings-row .battle-chart-card {
+  grid-column: span 3;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.battle-standings-row .live-standings-card {
+  grid-column: span 1;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px 10px;
+  box-shadow: 0 2px 10px rgba(10, 46, 34, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.live-standings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 6px;
+}
+.live-standings-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #123f31;
+}
+.live-standings-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 1px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+.live-standings-badge .live-pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+}
+.live-standings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+.live-standings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+.live-standings-row.leader {
+  background: #f8fafc;
+}
+.live-standings-player-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.live-rank-num {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  width: 14px;
+  text-align: center;
+}
+.live-rank-num.gold {
+  color: #b45309;
+}
+.live-rank-num.silver {
+  color: #475569;
+}
+.live-rank-num.bronze {
+  color: #92400e;
+}
+.live-player-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.live-player-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.live-player-breakdown {
+  font-size: 9px;
+  font-weight: 600;
+  color: #059669;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.live-standings-pts-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.live-pts-gain {
+  font-size: 10px;
+  font-weight: 800;
+  color: #065f46;
+  background: #dcfce7;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.live-total-pts {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.live-total-pts .pts-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: #64748b;
+}
+.live-standings-rules {
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 6px;
+  margin-top: 4px;
+  text-align: center;
+}
+@media (max-width: 1024px) {
+  .battle-standings-row {
+    grid-template-columns: 1fr;
+  }
+  .battle-standings-row .battle-chart-card,
+  .battle-standings-row .live-standings-card {
+    grid-column: span 1;
+  }
+}
+
+
+.live-match-badge.final {
+  background: #064e3b;
+  color: #a7f3d0;
+  border: 1px solid rgba(110, 231, 183, 0.35);
+  font-weight: 700;
+}
+.live-standings-badge.final {
+  color: #047857;
+  background: #d1fae5;
+  border-color: #6ee7b7;
+}
+.fullscreen-stat-card.final-match-card {
+  border-color: #10b981;
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+.eyebrow.green {
+  color: #059669;
+  font-weight: 700;
+}
+
+.live-match-badge.final {
+  background: #064e3b;
+  color: #a7f3d0;
+  border: 1px solid rgba(110, 231, 183, 0.35);
+  font-weight: 700;
+}
+.live-standings-badge.final {
+  color: #047857;
+  background: #d1fae5;
+  border-color: #6ee7b7;
+}
+.fullscreen-stat-card.final-match-card {
+  border-color: #10b981;
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+.eyebrow.green {
+  color: #059669;
+  font-weight: 700;
+}
+
+
+/* ==========================================================================
+   AUGUSTA MASTERS LEADERBOARD STYLING
+   ========================================================================== */
+
+.live-standings-card.masters-leaderboard-card {
+  background: #ffffff;
+  border: 1.5px solid #004e28;
+  border-radius: 16px 16px 8px 8px;
+  box-shadow: 0 4px 16px rgba(0, 78, 40, 0.12);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  justify-content: space-between;
+}
+
+.masters-arch-crest {
+  background: #ffffff;
+  padding: 6px 12px 3px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.masters-arch-title {
+  font-family: "Georgia", "Baskerville", "Playfair Display", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 19px;
+  font-weight: 700;
+  color: #004e28;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.masters-header-bar {
+  background: #004e28;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 12px;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.masters-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.masters-col-today {
+  width: 32px;
+  text-align: center;
+}
+
+.masters-col-total {
+  width: 34px;
+  text-align: center;
+}
+
+.masters-slats-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #ffffff;
+}
+
+.masters-slat-row {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.15s ease;
+  min-height: 38px;
+}
+
+.masters-slat-row:nth-child(even) {
+  background: #fafcfb;
+}
+
+.masters-slat-row:hover {
+  background: #f0fdf4;
+}
+
+.masters-col-rank {
+  font-size: 13.5px;
+  font-weight: 900;
+  color: #005826;
+  width: 18px;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.masters-col-player {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+
+.masters-player-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.masters-player-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.masters-player-sub {
+  font-size: 8px;
+  font-weight: 600;
+  color: #047857;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.masters-col-gain {
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.masters-pts-gain {
+  font-size: 11px;
+  font-weight: 800;
+  color: #005826;
+}
+
+.masters-pts-even {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.masters-col-total-badge {
+  width: 34px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.masters-red-tile {
+  background: #ba1b2b;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 900;
+  width: 34px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 2px rgba(186, 27, 43, 0.35);
+}
+
+.masters-footer-bar {
+  background: #004e28;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.masters-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 8px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #ecfdf5;
+}
+
+.masters-yellow-stripe {
+  height: 3.5px;
+  background: #ffd100;
+  width: 100%;
+}
+
+/* Masters Leaderboard in Clubhouse Tab */
+.leaderboard.masters-theme-board {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1.5px solid #004e28;
+  box-shadow: 0 4px 16px rgba(0, 78, 40, 0.1);
+  padding: 0;
+  background: #ffffff;
+}
+
+.leaderboard.masters-theme-board .masters-heading {
+  background: #004e28;
+  padding: 10px 16px;
+  margin: 0;
+}
+
+.leaderboard.masters-theme-board table {
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.leaderboard.masters-theme-board table thead th {
+  background: #02532f;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 10.5px;
+  letter-spacing: 0.8px;
+  border: none;
+  padding: 7px 12px;
+}
+
+.leaderboard.masters-theme-board table tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.leaderboard.masters-theme-board table tbody td.masters-rank-cell {
+  color: #005826;
+  font-weight: 900;
+  font-size: 13.5px;
+}
+
+.leaderboard.masters-theme-board table tbody tr:nth-child(even) {
+  background: #fafcfb;
+}
+
+.leaderboard.masters-theme-board table tbody tr:hover {
+  background: #f0fdf4;
+}
+
+.masters-red-tile-sm {
+  background: #ba1b2b;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 22px;
+  box-shadow: 0 1px 2px rgba(186, 27, 43, 0.3);
+}
+
+.leaderboard.masters-theme-board .leader-foot.masters-footer {
+  background: #004e28;
+  color: #ecfdf5;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.leaderboard.masters-theme-board .masters-footer-status {
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+
+/* ==========================================================================
+   UNIFORM PROPORTIONS & BALANCED SCALING FOR BATTLE GRAPH & STANDINGS
+   ========================================================================== */
+
+.battle-chart-card {
+  background: #ffffff !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px 6px !important;
+  margin-top: 0 !important;
+  box-shadow: 0 2px 8px rgba(10, 46, 34, 0.04) !important;
+}
+
+.battle-chart-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 6px !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.battle-chart-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+}
+
+.battle-chart-legend {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.battle-legend-pill {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  padding: 2px 7px !important;
+  border-radius: 12px !important;
+}
+
+.battle-legend-line {
+  width: 12px !important;
+  height: 2px !important;
+  border-radius: 1px !important;
+}
+
+.battle-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.battle-mode-toggle {
+  display: flex !important;
+  align-items: center !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 5px !important;
+  padding: 2px !important;
+  gap: 2px !important;
+}
+
+.battle-mode-btn {
+  background: transparent !important;
+  border: none !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  padding: 2px 6px !important;
+  border-radius: 3px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.battle-mode-btn.active {
+  background: #ffffff !important;
+  color: #0b4d37 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+.battle-svg-wrapper {
+  position: relative !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  padding-bottom: 2px !important;
+}
+
+.battle-svg {
+  width: 100% !important;
+  min-width: 680px !important;
+  height: auto !important;
+  aspect-ratio: 840 / 148 !important;
+  display: block !important;
+}
+
+/* Masters Leaderboard Card Proportion Tuning */
+.live-standings-card.masters-leaderboard-card {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 78, 40, 0.08) !important;
+}
+
+.masters-arch-crest {
+  padding: 3px 8px 1px !important;
+}
+
+.masters-arch-title {
+  font-size: 14px !important;
+  letter-spacing: 1.5px !important;
+}
+
+.masters-header-bar {
+  padding: 3px 8px !important;
+  font-size: 8px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.6px !important;
+}
+
+.masters-slat-row {
+  padding: 3px 8px !important;
+  min-height: 27px !important;
+}
+
+.masters-col-rank {
+  font-size: 11px !important;
+  width: 14px !important;
+}
+
+.masters-player-name {
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+}
+
+.masters-player-sub {
+  font-size: 7.5px !important;
+}
+
+.masters-col-gain {
+  width: 26px !important;
+}
+
+.masters-pts-gain {
+  font-size: 9.5px !important;
+}
+
+.masters-pts-even {
+  font-size: 8.5px !important;
+}
+
+.masters-col-total-badge {
+  width: 28px !important;
+}
+
+.masters-red-tile {
+  width: 26px !important;
+  height: 19px !important;
+  font-size: 10.5px !important;
+  font-weight: 900 !important;
+}
+
+.masters-footer-inner {
+  padding: 2.5px 6px !important;
+  font-size: 7.5px !important;
+}
+
+.masters-yellow-stripe {
+  height: 2.5px !important;
 }
 

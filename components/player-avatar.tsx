@@ -30,15 +30,33 @@ const portraits: Record<
   },
 };
 
+const aliases: Record<string, string> = {
+  brian: "brian scott",
+  john: "john colreavey",
+  derek: "derek mcmillan",
+  tony: "tony mclean",
+};
+
 export default function PlayerAvatar({
   name,
   className = "",
+  size,
 }: {
   name: string;
   className?: string;
+  size?: number;
 }) {
-  const portrait = portraits[name.trim().toLowerCase()];
-  const initials = name
+  const normalizedKey = name.trim().toLowerCase();
+  const resolvedKey = aliases[normalizedKey] || normalizedKey;
+  const portrait = portraits[resolvedKey];
+  const displayName =
+    resolvedKey !== normalizedKey
+      ? resolvedKey
+          .split(" ")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ")
+      : name;
+  const initials = displayName
     .trim()
     .split(/\s+/)
     .map((part) => part[0])
@@ -48,9 +66,20 @@ export default function PlayerAvatar({
   return (
     <span
       className={`avatar ${portrait ? `avatar-photo ${portrait.crop}` : ""} ${className}`}
-      title={name}
+      style={
+        size
+          ? {
+              width: size,
+              height: size,
+              minWidth: size,
+              minHeight: size,
+              fontSize: `${Math.round(size * 0.42)}px`,
+            }
+          : undefined
+      }
+      title={displayName}
       role="img"
-      aria-label={name}
+      aria-label={displayName}
     >
       {portrait ? (
         <Image
