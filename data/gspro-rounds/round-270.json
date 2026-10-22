@@ -1,0 +1,540 @@
+{
+  "isGSProRunning": false,
+  "isRoundActive": false,
+  "isMatchFinished": true,
+  "matchResult": {
+    "isFinished": true,
+    "winnerTeamId": "team-b",
+    "winnerTeamName": "John Colreavey",
+    "loserTeamId": "team-a",
+    "loserTeamName": "Brian Scott",
+    "winningMargin": "1 Shot",
+    "isTie": false,
+    "scoreSummary": "53 - 54",
+    "winningPlayers": [
+      "John Colreavey"
+    ]
+  },
+  "statusMessage": "Match completed on 14 Oct 2026 at 20:15 · 18 holes recorded",
+  "source": "idle",
+  "lastUpdated": "2026-10-22T12:35:40.269Z",
+  "courseKey": "royal_hawaiian_gsp",
+  "courseName": "Royal Hawaiian Golf Club",
+  "courseLocation": "Kailua, Hawaii, USA",
+  "coursePar": 72,
+  "selectedTee": "Blue",
+  "totalYards": 5631,
+  "courseHoles": [
+    {
+      "hole": 1,
+      "par": 4,
+      "strokeIndex": 9,
+      "distanceYards": 305
+    },
+    {
+      "hole": 2,
+      "par": 3,
+      "strokeIndex": 15,
+      "distanceYards": 122
+    },
+    {
+      "hole": 3,
+      "par": 4,
+      "strokeIndex": 11,
+      "distanceYards": 366
+    },
+    {
+      "hole": 4,
+      "par": 4,
+      "strokeIndex": 3,
+      "distanceYards": 311
+    },
+    {
+      "hole": 5,
+      "par": 5,
+      "strokeIndex": 7,
+      "distanceYards": 456
+    },
+    {
+      "hole": 6,
+      "par": 4,
+      "strokeIndex": 13,
+      "distanceYards": 303
+    },
+    {
+      "hole": 7,
+      "par": 3,
+      "strokeIndex": 17,
+      "distanceYards": 162
+    },
+    {
+      "hole": 8,
+      "par": 5,
+      "strokeIndex": 5,
+      "distanceYards": 451
+    },
+    {
+      "hole": 9,
+      "par": 4,
+      "strokeIndex": 1,
+      "distanceYards": 349
+    },
+    {
+      "hole": 10,
+      "par": 5,
+      "strokeIndex": 18,
+      "distanceYards": 422
+    },
+    {
+      "hole": 11,
+      "par": 4,
+      "strokeIndex": 2,
+      "distanceYards": 390
+    },
+    {
+      "hole": 12,
+      "par": 3,
+      "strokeIndex": 10,
+      "distanceYards": 137
+    },
+    {
+      "hole": 13,
+      "par": 4,
+      "strokeIndex": 6,
+      "distanceYards": 297
+    },
+    {
+      "hole": 14,
+      "par": 5,
+      "strokeIndex": 4,
+      "distanceYards": 518
+    },
+    {
+      "hole": 15,
+      "par": 4,
+      "strokeIndex": 8,
+      "distanceYards": 288
+    },
+    {
+      "hole": 16,
+      "par": 3,
+      "strokeIndex": 12,
+      "distanceYards": 162
+    },
+    {
+      "hole": 17,
+      "par": 4,
+      "strokeIndex": 16,
+      "distanceYards": 285
+    },
+    {
+      "hole": 18,
+      "par": 4,
+      "strokeIndex": 14,
+      "distanceYards": 307
+    }
+  ],
+  "holesCompleted": 13,
+  "currentHole": 13,
+  "matchState": "John Colreavey def. Brian Scott (1 Shot)",
+  "formatName": "1v1 Match Play",
+  "teams": [
+    {
+      "id": "team-a",
+      "name": "Brian Scott",
+      "playerNames": [
+        "Brian Scott"
+      ],
+      "handicap": 0,
+      "scores": [
+        {
+          "hole": 1,
+          "gross": 3,
+          "net": 3,
+          "par": 4,
+          "strokeIndex": 9,
+          "distanceYards": 305,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 2,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 15,
+          "distanceYards": 122,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 3,
+          "gross": 5,
+          "net": 5,
+          "par": 4,
+          "strokeIndex": 11,
+          "distanceYards": 366,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 4,
+          "gross": 6,
+          "net": 4,
+          "par": 4,
+          "strokeIndex": 3,
+          "distanceYards": 311,
+          "handicapStrokes": 2
+        },
+        {
+          "hole": 5,
+          "gross": 4,
+          "net": 3,
+          "par": 5,
+          "strokeIndex": 7,
+          "distanceYards": 456,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 6,
+          "gross": 5,
+          "net": 5,
+          "par": 4,
+          "strokeIndex": 13,
+          "distanceYards": 303,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 7,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 17,
+          "distanceYards": 162,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 8,
+          "gross": 5,
+          "net": 4,
+          "par": 5,
+          "strokeIndex": 5,
+          "distanceYards": 451,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 9,
+          "gross": 4,
+          "net": 3,
+          "par": 4,
+          "strokeIndex": 1,
+          "distanceYards": 349,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 10,
+          "gross": 5,
+          "net": 5,
+          "par": 5,
+          "strokeIndex": 18,
+          "distanceYards": 422,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 11,
+          "gross": 5,
+          "net": 4,
+          "par": 4,
+          "strokeIndex": 2,
+          "distanceYards": 390,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 12,
+          "gross": 3,
+          "net": 3,
+          "par": 3,
+          "strokeIndex": 10,
+          "distanceYards": 137,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 13,
+          "gross": 1,
+          "net": 1,
+          "par": 4,
+          "strokeIndex": 6,
+          "distanceYards": 297,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 14,
+          "gross": 0,
+          "net": 0,
+          "par": 5,
+          "strokeIndex": 4,
+          "distanceYards": 518,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 15,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 8,
+          "distanceYards": 288,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 16,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 12,
+          "distanceYards": 162,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 17,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 16,
+          "distanceYards": 285,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 18,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 14,
+          "distanceYards": 307,
+          "handicapStrokes": 0
+        }
+      ],
+      "grossTotal": 54,
+      "netTotal": 48,
+      "grossToPar": 2,
+      "grossToParLabel": "+2",
+      "netToPar": -4,
+      "netToParLabel": "-4"
+    },
+    {
+      "id": "team-b",
+      "name": "John Colreavey",
+      "playerNames": [
+        "John Colreavey"
+      ],
+      "handicap": 0,
+      "scores": [
+        {
+          "hole": 1,
+          "gross": 3,
+          "net": 3,
+          "par": 4,
+          "strokeIndex": 9,
+          "distanceYards": 305,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 2,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 15,
+          "distanceYards": 122,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 3,
+          "gross": 5,
+          "net": 5,
+          "par": 4,
+          "strokeIndex": 11,
+          "distanceYards": 366,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 4,
+          "gross": 6,
+          "net": 4,
+          "par": 4,
+          "strokeIndex": 3,
+          "distanceYards": 311,
+          "handicapStrokes": 2
+        },
+        {
+          "hole": 5,
+          "gross": 4,
+          "net": 3,
+          "par": 5,
+          "strokeIndex": 7,
+          "distanceYards": 456,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 6,
+          "gross": 5,
+          "net": 5,
+          "par": 4,
+          "strokeIndex": 13,
+          "distanceYards": 303,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 7,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 17,
+          "distanceYards": 162,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 8,
+          "gross": 5,
+          "net": 4,
+          "par": 5,
+          "strokeIndex": 5,
+          "distanceYards": 451,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 9,
+          "gross": 4,
+          "net": 3,
+          "par": 4,
+          "strokeIndex": 1,
+          "distanceYards": 349,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 10,
+          "gross": 5,
+          "net": 5,
+          "par": 5,
+          "strokeIndex": 18,
+          "distanceYards": 422,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 11,
+          "gross": 5,
+          "net": 4,
+          "par": 4,
+          "strokeIndex": 2,
+          "distanceYards": 390,
+          "handicapStrokes": 1
+        },
+        {
+          "hole": 12,
+          "gross": 3,
+          "net": 3,
+          "par": 3,
+          "strokeIndex": 10,
+          "distanceYards": 137,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 13,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 6,
+          "distanceYards": 297,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 14,
+          "gross": 0,
+          "net": 0,
+          "par": 5,
+          "strokeIndex": 4,
+          "distanceYards": 518,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 15,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 8,
+          "distanceYards": 288,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 16,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 12,
+          "distanceYards": 162,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 17,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 16,
+          "distanceYards": 285,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 18,
+          "gross": 0,
+          "net": 0,
+          "par": 4,
+          "strokeIndex": 14,
+          "distanceYards": 307,
+          "handicapStrokes": 0
+        }
+      ],
+      "grossTotal": 53,
+      "netTotal": 47,
+      "grossToPar": 5,
+      "grossToParLabel": "+5",
+      "netToPar": -1,
+      "netToParLabel": "-1"
+    }
+  ],
+  "pinContests": [
+    {
+      "hole": 8,
+      "type": "closest_in_2",
+      "awardType": "team",
+      "title": "Closest Team in 2 · Hole 8",
+      "leader": {
+        "playerName": "Brian Scott",
+        "teamName": "Brian Scott",
+        "playerNames": [
+          "Brian Scott"
+        ],
+        "distanceFeet": "10 ft 1 in"
+      }
+    },
+    {
+      "hole": 17,
+      "type": "closest_to_pin",
+      "awardType": "solo",
+      "title": "Closest to Pin · Hole 17",
+      "leader": {
+        "playerName": "John Colreavey",
+        "teamName": "John Colreavey",
+        "playerNames": [
+          "John Colreavey"
+        ],
+        "distanceFeet": "5 ft 6 in"
+      }
+    }
+  ],
+  "telemetry": {
+    "longestDrive": {
+      "playerId": "brian-scott",
+      "playerName": "Brian Scott",
+      "distance": 284.5,
+      "carryDistance": 268.2,
+      "hole": 9,
+      "ballSpeed": 161.4
+    },
+    "totalShots": 52
+  }
+}

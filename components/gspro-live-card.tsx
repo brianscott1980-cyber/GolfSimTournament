@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -15,6 +15,12 @@ import {
   Swords,
   Trophy,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  History,
+  Calendar,
+  Check,
+  Loader2,
 } from "lucide-react";
 import PlayerAvatar from "@/components/player-avatar";
 import type { GSProLiveState } from "@/lib/gspro-live";
@@ -37,7 +43,73 @@ export default function GSProLiveCard({
   const [battleMode, setBattleMode] = useState<"net" | "gross">("net");
   const [hoveredHoleIndex, setHoveredHoleIndex] = useState<number | null>(null);
 
-  if (!liveData.teams || liveData.teams.length === 0) {
+  // Previous Rounds Explorer state
+  const [selectedRoundState, setSelectedRoundState] = useState<GSProLiveState | null>(null);
+  const [selectedRoundId, setSelectedRoundId] = useState<number | null>(() => {
+    if (liveData.isRoundActive) return null;
+    return liveData.selectedRoundId || liveData.previousRounds?.[0]?.id || null;
+  });
+  const [loadingRoundId, setLoadingRoundId] = useState<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const [historyList, setHistoryList] = useState<any[]>(() => liveData.previousRounds || []);
+
+  useEffect(() => {
+    if (liveData.previousRounds && liveData.previousRounds.length > 0) {
+      setHistoryList(liveData.previousRounds);
+    } else if (historyList.length === 0) {
+      fetch("/api/gspro/rounds")
+        .then((r) => r.json())
+        .then((items) => {
+          if (Array.isArray(items)) setHistoryList(items);
+        })
+        .catch(() => {});
+    }
+  }, [liveData.previousRounds]);
+
+  const handleSelectRound = async (id: number) => {
+    if (selectedRoundId === id && selectedRoundState) return;
+    setSelectedRoundId(id);
+    setLoadingRoundId(id);
+    try {
+      const res = await fetch(`/api/gspro/rounds?id=${id}`);
+      if (res.ok) {
+        const fetched: GSProLiveState = await res.json();
+        setSelectedRoundState({
+          ...fetched,
+          selectedRoundId: id,
+          previousRounds: historyList,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load historical round:", err);
+    } finally {
+      setLoadingRoundId(null);
+    }
+  };
+
+  const isViewingLive = liveData.isRoundActive && selectedRoundId === null;
+  const displayData = isViewingLive
+    ? liveData
+    : selectedRoundState && selectedRoundState.selectedRoundId === selectedRoundId
+    ? selectedRoundState
+    : liveData;
+
+  const data = displayData;
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -260, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 260, behavior: "smooth" });
+    }
+  };
+
+  if ((!data.teams || data.teams.length === 0) && historyList.length === 0) {
     if (!liveData.isGSProRunning) {
       return (
         <div className="live-status-banner idle">
@@ -66,8 +138,8 @@ export default function GSProLiveCard({
   }
 
   const holes =
-    liveData.courseHoles && liveData.courseHoles.length > 0
-      ? liveData.courseHoles
+    data.courseHoles && data.courseHoles.length > 0
+      ? data.courseHoles
       : Array.from({ length: 18 }, (_, i) => ({
           hole: i + 1,
           par: 4,
@@ -76,7 +148,7 @@ export default function GSProLiveCard({
         }));
 
   const mainTournament = tournaments[0] ?? demo;
-  const activeHoleNumber = liveData.currentHole || 1;
+  const activeHoleNumber = data.currentHole || 1;
   const activeHoleMeta = holes[activeHoleNumber - 1];
 
   const totalCoursePar = holes.reduce((sum, h) => sum + h.par, 0);
@@ -86,10 +158,17 @@ export default function GSProLiveCard({
       <div className="live-scorecard-header">
         <div className="live-scorecard-title-group">
           {!fullscreen && (
-            <div className={`eyebrow ${liveData.isMatchFinished ? "green" : "gold"}`}>
-              {liveData.isMatchFinished ? (
+            <div className={`eyebrow ${data.isMatchFinished ? "green" : "gold"}`}>
+              {isViewingLive ? (
                 <>
-                  <CheckCircle2
+                  <span className="live-dot" /> LIVE FROM GSPRO ·{" "}
+                  {data.holesCompleted >= 18
+                    ? "ROUND COMPLETE"
+                    : `HOLE ${activeHoleNumber} IN PROGRESS`}
+                </>
+              ) : (
+                <>
+                  <History
                     size={13}
                     style={{
                       display: "inline-block",
@@ -99,41 +178,34 @@ export default function GSProLiveCard({
                     }}
                   />
                   {liveData.isRoundActive
-                    ? "MATCH COMPLETE · 18 HOLES RECORDED"
-                    : "LAST MATCH · 18 HOLES RECORDED (FINAL)"}
-                </>
-              ) : (
-                <>
-                  <span className="live-dot" /> LIVE FROM GSPRO ·{" "}
-                  {liveData.holesCompleted >= 18
-                    ? "ROUND COMPLETE"
-                    : `HOLE ${activeHoleNumber} IN PROGRESS`}
+                    ? `MATCH ARCHIVE · ${data.holesCompleted} HOLES RECORDED (FINAL)`
+                    : `PREVIOUS ROUNDS EXPLORER · ${data.holesCompleted >= 18 ? "18 HOLES RECORDED (FINAL)" : `${data.holesCompleted} HOLES RECORDED`}`}
                 </>
               )}
             </div>
           )}
           <div className="live-title-row">
-            <h2>{liveData.courseName || "Currahee Club"}</h2>
-            {fullscreen && liveData.matchState && (
-              <span className={`live-match-badge ${liveData.isMatchFinished ? "final" : ""}`}>
-                {liveData.isMatchFinished ? (
+            <h2>{data.courseName || "Currahee Club"}</h2>
+            {fullscreen && data.matchState && (
+              <span className={`live-match-badge ${data.isMatchFinished ? "final" : ""}`}>
+                {data.isMatchFinished ? (
                   <CheckCircle2 size={13} style={{ color: "#34d399", marginRight: 5 }} />
                 ) : (
                   <span className="live-dot" />
                 )}
-                {liveData.matchState}
+                {data.matchState}
               </span>
             )}
           </div>
           <div className="live-meta">
-            <span>{liveData.courseLocation || "Toccoa, Georgia, USA"}</span>
+            <span>{data.courseLocation || "Toccoa, Georgia, USA"}</span>
             <span>·</span>
-            <span>Par {liveData.coursePar || totalCoursePar || 72}</span>
+            <span>Par {data.coursePar || totalCoursePar || 72}</span>
             <span>·</span>
-            <span>{liveData.formatName || "2v2 Scramble"}</span>
-            {!fullscreen && liveData.matchState && (
-              <span className={`live-match-badge ${liveData.isMatchFinished ? "final" : ""}`}>
-                {liveData.matchState}
+            <span>{data.formatName || "2v2 Scramble"}</span>
+            {!fullscreen && data.matchState && (
+              <span className={`live-match-badge ${data.isMatchFinished ? "final" : ""}`}>
+                {data.matchState}
               </span>
             )}
           </div>
@@ -166,6 +238,129 @@ export default function GSProLiveCard({
           )}
         </div>
       </div>
+
+      {/* Horizontal Previous Rounds Explorer Cards */}
+      {historyList.length > 0 && (
+        <div className="previous-rounds-explorer-wrap">
+          <div className="previous-rounds-bar">
+            <div className="previous-rounds-info">
+              <div className="previous-rounds-title">
+                <History size={13} />
+                <span>Previous Rounds Explorer</span>
+                <span className="previous-rounds-count">
+                  ({historyList.length} past match{historyList.length === 1 ? "" : "es"} saved)
+                </span>
+              </div>
+              <span className="previous-rounds-subtitle">
+                {liveData.isRoundActive
+                  ? "Live match in progress · Select a past match card to review previous rounds"
+                  : "Select any past match below to explore its battle graph, Augusta standings & scorecards"}
+              </span>
+            </div>
+            <div className="previous-rounds-controls">
+              <button
+                type="button"
+                className="button outline icon-only rounds-scroll-arrow"
+                onClick={scrollLeft}
+                title="Scroll past matches left"
+                aria-label="Scroll past matches left"
+              >
+                <ChevronLeft size={15} />
+              </button>
+              <button
+                type="button"
+                className="button outline icon-only rounds-scroll-arrow"
+                onClick={scrollRight}
+                title="Scroll past matches right"
+                aria-label="Scroll past matches right"
+              >
+                <ChevronRight size={15} />
+              </button>
+            </div>
+          </div>
+
+          <div className="previous-rounds-scroll-area" ref={scrollContainerRef}>
+            {liveData.isRoundActive && (
+              <button
+                type="button"
+                className={`round-explorer-card live-card ${isViewingLive ? "active" : ""}`}
+                onClick={() => {
+                  setSelectedRoundId(null);
+                  setSelectedRoundState(null);
+                }}
+              >
+                <div className="round-card-top">
+                  <span className="round-live-pill">
+                    <span className="live-dot" /> LIVE MATCH
+                  </span>
+                  <span className="round-card-status-badge">
+                    Hole {liveData.currentHole}/18
+                  </span>
+                </div>
+                <div className="round-card-course" title={liveData.courseName}>
+                  {liveData.courseName || "Currahee Club"}
+                </div>
+                <div className="round-card-teams" title={liveData.teams.map((t) => t.name).join(" vs ")}>
+                  {liveData.teams.map((t) => t.name).join(" vs ")}
+                </div>
+                <div className="round-card-footer">
+                  <div className="round-card-score">
+                    <Zap size={11} style={{ color: "#ca8a04" }} />
+                    <span>{liveData.matchState || "In Progress"}</span>
+                  </div>
+                  {isViewingLive && (
+                    <span className="round-card-viewing-badge">
+                      <Check size={10} /> Active
+                    </span>
+                  )}
+                </div>
+              </button>
+            )}
+
+            {historyList.map((r) => {
+              const isSelected = selectedRoundId === r.id;
+              const isLoading = loadingRoundId === r.id;
+
+              return (
+                <button
+                  key={`round-card-${r.id}`}
+                  type="button"
+                  className={`round-explorer-card ${isSelected ? "active" : ""}`}
+                  onClick={() => handleSelectRound(r.id)}
+                >
+                  <div className="round-card-top">
+                    <span className="round-card-date">
+                      <Calendar size={10} /> {r.dateLabel}
+                    </span>
+                    <span className={`round-card-status-badge ${r.holesCount >= 18 ? "complete" : ""}`}>
+                      {r.holesCount}H · FINAL
+                    </span>
+                  </div>
+                  <div className="round-card-course" title={r.courseName}>
+                    {r.courseName}
+                  </div>
+                  <div className="round-card-teams" title={r.teamsSummary}>
+                    {r.teamsSummary}
+                  </div>
+                  <div className="round-card-footer">
+                    <div className="round-card-score">
+                      <Trophy size={11} />
+                      <span>{r.scoreSummary || r.matchState}</span>
+                    </div>
+                    {isLoading ? (
+                      <span className="round-card-loading">Loading...</span>
+                    ) : isSelected ? (
+                      <span className="round-card-viewing-badge">
+                        <Check size={10} /> Viewing
+                      </span>
+                    ) : null}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="live-scorecard-table-wrap masters-scorecard-wrap">
         <table className="live-scorecard-table masters-scorecard-table">
@@ -247,7 +442,7 @@ export default function GSProLiveCard({
             </tr>
           </thead>
           <tbody>
-            {liveData.teams.map((team) => (
+            {data.teams.map((team) => (
               <tr key={team.id}>
                 <td className="live-score-player-col">
                   <div className="live-team-scramble-cell">
@@ -394,9 +589,9 @@ export default function GSProLiveCard({
 
           <div className="fullscreen-lower-half">
           <div className="fullscreen-dashboard-grid">
-            <div className={`fullscreen-stat-card ${liveData.isMatchFinished ? "final-match-card" : ""}`}>
+            <div className={`fullscreen-stat-card ${data.isMatchFinished ? "final-match-card" : ""}`}>
               <span className="fullscreen-stat-label">
-                {liveData.isMatchFinished ? (
+                {data.isMatchFinished ? (
                   <>
                     <Trophy size={14} style={{ color: "#f59e0b" }} /> FINAL MATCH RESULT
                   </>
@@ -407,47 +602,47 @@ export default function GSProLiveCard({
                 )}
               </span>
               <div className="fullscreen-stat-value">
-                {liveData.matchState || "Round Complete"}
+                {data.matchState || "Round Complete"}
               </div>
               <div className="fullscreen-stat-sub">
-                {liveData.isMatchFinished
-                  ? `Official Result · 18 holes complete · Total shots: ${liveData.telemetry?.totalShots || 0}`
-                  : `Thru hole ${liveData.holesCompleted} · Total shots: ${liveData.telemetry?.totalShots || 0}`}
+                {data.isMatchFinished
+                  ? `Official Result · 18 holes complete · Total shots: ${data.telemetry?.totalShots || 0}`
+                  : `Thru hole ${data.holesCompleted} · Total shots: ${data.telemetry?.totalShots || 0}`}
               </div>
             </div>
-            {liveData.telemetry?.longestDrive && (
+            {data.telemetry?.longestDrive && (
               <div className="fullscreen-stat-card">
                 <span className="fullscreen-stat-label">
-                  <Zap size={14} style={{ color: "#d19a3b" }} /> LONGEST DRIVE · HOLE {liveData.telemetry.longestDrive.hole}
+                  <Zap size={14} style={{ color: "#d19a3b" }} /> LONGEST DRIVE · HOLE {data.telemetry.longestDrive.hole}
                 </span>
                 <div className="fullscreen-stat-value">
-                  {liveData.telemetry.longestDrive.distance} YDS
-                  {liveData.telemetry.longestDrive.carryDistance ? (
+                  {data.telemetry.longestDrive.distance} YDS
+                  {data.telemetry.longestDrive.carryDistance ? (
                     <span className="fullscreen-stat-carry">
-                      {" "}({liveData.telemetry.longestDrive.carryDistance}y carry)
+                      {" "}({data.telemetry.longestDrive.carryDistance}y carry)
                     </span>
                   ) : null}
                 </div>
                 <div className="fullscreen-award-row">
                   <div className="fullscreen-award-avatars">
-                    <PlayerAvatar name={liveData.telemetry.longestDrive.playerName} className="small" />
+                    <PlayerAvatar name={data.telemetry.longestDrive.playerName} className="small" />
                   </div>
                   <div className="fullscreen-award-details">
                     <span className="fullscreen-award-winner">
-                      {liveData.telemetry.longestDrive.playerName}
+                      {data.telemetry.longestDrive.playerName}
                     </span>
                     <span className="fullscreen-award-sub">
-                      {liveData.telemetry.longestDrive.carryDistance
-                        ? `${liveData.telemetry.longestDrive.carryDistance} yds carry · `
+                      {data.telemetry.longestDrive.carryDistance
+                        ? `${data.telemetry.longestDrive.carryDistance} yds carry · `
                         : ""}
-                      {liveData.telemetry.longestDrive.ballSpeed} mph ball speed
+                      {data.telemetry.longestDrive.ballSpeed} mph ball speed
                     </span>
                   </div>
                 </div>
               </div>
             )}
-            {liveData.pinContests && liveData.pinContests.length > 0 ? (
-              liveData.pinContests.map((contest) => (
+            {data.pinContests && data.pinContests.length > 0 ? (
+              data.pinContests.map((contest) => (
                 <div className="fullscreen-stat-card" key={contest.hole}>
                   <span className="fullscreen-stat-label">
                     <Flag size={14} /> {contest.title.toUpperCase()} · {contest.awardType === "team" ? "TEAM AWARD" : "SOLO AWARD"}
@@ -495,7 +690,7 @@ export default function GSProLiveCard({
                   </span>
                   <div className="fullscreen-stat-value">Real-Time Sync Active</div>
                   <div className="fullscreen-stat-sub">
-                    {liveData.courseName} · {liveData.courseLocation}
+                    {data.courseName} · {data.courseLocation}
                   </div>
                 </div>
               </>
@@ -505,11 +700,11 @@ export default function GSProLiveCard({
           {/* 4-Column Row: Battle Graph (3 cols) + Live Tournament Standings (1 col) */}
           <div className="battle-standings-row">
             {/* Columns 1-3: Dual-Team Head-to-Head Battle Progress Chart */}
-            {liveData.teams.length >= 2 && liveData.teams[0].scores.length > 0 && (
+            {data.teams.length >= 2 && data.teams[0].scores.length > 0 && (
               <div className="battle-chart-card">
           {(() => {
-            const teamA = liveData.teams[0];
-            const teamB = liveData.teams[1];
+            const teamA = data.teams[0];
+            const teamB = data.teams[1];
             const count = Math.min(teamA.scores.length, teamB.scores.length, 18);
 
             // Calculate cumulative scores to par for both teams
@@ -1018,8 +1213,8 @@ export default function GSProLiveCard({
         };
 
         // 1. Team that wins: each player gets 3 points. Draw: 1 pt each
-        const tA = liveData.teams[0];
-        const tB = liveData.teams[1];
+        const tA = data.teams[0];
+        const tB = data.teams[1];
         if (tA && tB && tA.scores.length > 0) {
           if (tA.netTotal < tB.netTotal) {
             livePointsMap.brian.pts += 3;
@@ -1041,8 +1236,8 @@ export default function GSProLiveCard({
 
         // 2. Closest to the pin (solo): individual gets 1 point
         // 3. Closest to pin in 2 (team): each player on winning team gets 1 point
-        if (liveData.pinContests) {
-          liveData.pinContests.forEach((contest) => {
+        if (data.pinContests) {
+          data.pinContests.forEach((contest) => {
             if (contest.awardType === "solo") {
               const pName = (contest.leader.playerName || "").toLowerCase();
               const id = pName.includes("derek")
@@ -1109,7 +1304,7 @@ export default function GSProLiveCard({
             {/* Deep Masters Green Column Header Bar */}
             <div className="masters-header-bar">
               <div className="masters-header-left">
-                <span>{liveData.isMatchFinished ? "FINAL STANDINGS" : "LIVE STANDINGS"}</span>
+                <span>{data.isMatchFinished ? "FINAL STANDINGS" : "LIVE STANDINGS"}</span>
               </div>
               <div className="masters-header-right">
                 <span className="masters-col-today">TODAY</span>
@@ -1169,7 +1364,7 @@ export default function GSProLiveCard({
               <div className="masters-footer-inner">
                 <Flag size={10} style={{ color: "#ffd100" }} />
                 <span>
-                  {liveData.isMatchFinished
+                  {data.isMatchFinished
                     ? "Official Tournament Standings"
                     : "Live Points · Win: 3 pts · CTP: 1 pt · In 2: 1 pt"}
                 </span>

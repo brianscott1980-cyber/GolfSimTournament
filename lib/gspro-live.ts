@@ -96,7 +96,7 @@ export interface GSProLiveState {
     winningPlayers: string[];
   };
   statusMessage: string;
-  source: "live" | "simulated" | "idle";
+  source: "live" | "simulated" | "idle" | "archive";
   lastUpdated: string;
   courseKey?: string;
   courseName?: string;
@@ -129,6 +129,8 @@ export interface GSProLiveState {
       distance: number;
     };
   };
+  previousRounds?: any[];
+  selectedRoundId?: number;
 }
 
 const APPDATA_GSPRO_DIR = path.join(
@@ -364,6 +366,32 @@ export function getGSProLiveData(): GSProLiveState {
   const isRoundActive = isProcessRunning && shots.length > 0;
 
   if (shots.length === 0) {
+    try {
+      // Query historical rounds from GSPro.db
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { getGSProHistoricalRoundsList, getGSProHistoricalRoundState } = require("./gspro-db");
+      const previousRounds = getGSProHistoricalRoundsList(24);
+      if (Array.isArray(previousRounds) && previousRounds.length > 0) {
+        const latestRoundState = getGSProHistoricalRoundState(previousRounds[0].id);
+        if (latestRoundState) {
+          return {
+            ...latestRoundState,
+            isGSProRunning: isProcessRunning,
+            isRoundActive: false,
+            isMatchFinished: true,
+            statusMessage: isProcessRunning
+              ? "GSPro connected · Showing completed match results"
+              : "GSPro offline · Showing completed match results",
+            source: "archive",
+            previousRounds,
+            selectedRoundId: previousRounds[0].id,
+          };
+        }
+      }
+    } catch {
+      // Fallback to cache if sqlite db cannot be read
+    }
+
     const cachedLastMatch = loadLastMatchCache();
     if (cachedLastMatch) {
       return {
@@ -774,6 +802,12 @@ export function getGSProLiveData(): GSProLiveState {
       },
     },
   };
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { getGSProHistoricalRoundsList } = require("./gspro-db");
+    liveState.previousRounds = getGSProHistoricalRoundsList(24);
+  } catch {}
 
   if (isMatchFinished || (teams.length > 0 && completedHoles > 0)) {
     saveLastMatchCache(liveState);

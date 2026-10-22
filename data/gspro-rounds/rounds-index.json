@@ -1,0 +1,112 @@
+[
+  {
+    "id": 288,
+    "courseKey": "currahee_club_gsp",
+    "courseName": "Currahee Club",
+    "courseLocation": "Toccoa, Georgia, USA",
+    "date": "10/21/2026 7:07:39 PM",
+    "dateLabel": "21 Oct 2026",
+    "timeLabel": "19:07",
+    "holesCount": 18,
+    "playerCount": 4,
+    "playerNames": [
+      "Brian",
+      "John",
+      "Tony",
+      "Derek"
+    ],
+    "teamsSummary": "Brian & John vs Tony & Derek",
+    "formatName": "2v2 Scramble",
+    "matchState": "Brian & John def. Tony & Derek (1 Shot)",
+    "scoreSummary": "73 - 74",
+    "winnerName": "Brian & John",
+    "winningMargin": "1 Shot",
+    "tee": "White"
+  },
+  {
+    "id": 276,
+    "courseKey": "topoftherock_gsp",
+    "courseName": "Top of the Rock",
+    "courseLocation": "Ridgedale, MO",
+    "date": "10/17/2026 7:26:54 PM",
+    "dateLabel": "17 Oct 2026",
+    "timeLabel": "19:26",
+    "holesCount": 9,
+    "playerCount": 1,
+    "playerNames": [
+      "Brian"
+    ],
+    "teamsSummary": "Brian",
+    "formatName": "Stroke Play",
+    "matchState": "Brian shot 41",
+    "scoreSummary": "Leader: 41",
+    "winnerName": "Brian",
+    "tee": "Blue"
+  },
+  {
+    "id": 270,
+    "courseKey": "royal_hawaiian_gsp",
+    "courseName": "Royal Hawaiian Golf Club",
+    "courseLocation": "Kailua, Hawaii, USA",
+    "date": "10/14/2026 8:15:40 PM",
+    "dateLabel": "14 Oct 2026",
+    "timeLabel": "20:15",
+    "holesCount": 13,
+    "playerCount": 2,
+    "playerNames": [
+      "Brian",
+      "John"
+    ],
+    "teamsSummary": "Brian vs John",
+    "formatName": "1v1 Match Play",
+    "matchState": "John def. Brian (1 Shots)",
+    "scoreSummary": "54 - 53",
+    "winnerName": "John",
+    "winningMargin": "1 Shots",
+    "tee": "Blue"
+  },
+  {
+    "id": 265,
+    "courseKey": "royal_hawaiian_gsp",
+    "courseName": "Royal Hawaiian Golf Club",
+    "courseLocation": "Kailua, Hawaii, USA",
+    "date": "9/23/2026 7:25:10 PM",
+    "dateLabel": "23 Sept 2026",
+    "timeLabel": "19:25",
+    "holesCount": 18,
+    "playerCount": 3,
+    "playerNames": [
+      "Brian",
+      "Tony",
+      "John"
+    ],
+    "teamsSummary": "Brian, Tony, John",
+    "formatName": "Stroke Play",
+    "matchState": "John shot 65",
+    "scoreSummary": "Leader: 65",
+    "winnerName": "John",
+    "tee": "Black"
+  },
+  {
+    "id": 261,
+    "courseKey": "links_v1",
+    "courseName": "The Old Game",
+    "courseLocation": ", Scotland, Fictional",
+    "date": "9/16/2026 9:03:11 PM",
+    "dateLabel": "16 Sept 2026",
+    "timeLabel": "21:03",
+    "holesCount": 9,
+    "playerCount": 3,
+    "playerNames": [
+      "Brian",
+      "Tony",
+      "John"
+    ],
+    "teamsSummary": "Brian, Tony, John",
+    "formatName": "Stroke Play",
+    "matchState": "Brian shot 34",
+    "scoreSummary": "Leader: 34",
+    "winnerName": "Brian",
+    "tee": "White"
+  }
+]

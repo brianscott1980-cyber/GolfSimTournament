@@ -4290,3 +4290,230 @@ main > .wide-panel {
   height: 2.5px !important;
 }
 
+/* Previous Rounds Explorer */
+.previous-rounds-explorer-wrap {
+  margin: 0 0 20px 0;
+  padding: 12px 14px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.previous-rounds-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.previous-rounds-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.previous-rounds-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #0b4d37;
+  text-transform: uppercase;
+}
+
+.previous-rounds-title .previous-rounds-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: none;
+}
+
+.previous-rounds-subtitle {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.previous-rounds-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rounds-scroll-arrow {
+  width: 26px !important;
+  height: 26px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  color: #334155 !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rounds-scroll-arrow:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+.previous-rounds-scroll-area {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
+.previous-rounds-scroll-area::-webkit-scrollbar {
+  height: 6px;
+}
+
+.previous-rounds-scroll-area::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.round-explorer-card {
+  flex: 0 0 236px;
+  min-width: 236px;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.round-explorer-card:hover {
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.round-explorer-card.active {
+  border: 2px solid #0b4d37;
+  background: #f0fdf4;
+  box-shadow: 0 0 0 1px #0b4d37, 0 3px 10px rgba(11, 77, 55, 0.12);
+}
+
+.round-explorer-card.live-card {
+  border: 1.5px solid #facc15;
+  background: #fefce8;
+}
+
+.round-explorer-card.live-card.active {
+  border: 2px solid #ca8a04;
+  background: #fef08a;
+  box-shadow: 0 0 0 1px #ca8a04, 0 3px 10px rgba(202, 138, 4, 0.15);
+}
+
+.round-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+.round-card-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #64748b;
+}
+
+.round-card-status-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.round-card-status-badge.complete {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.round-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #b45309;
+  letter-spacing: 0.5px;
+}
+
+.round-card-course {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.round-card-teams {
+  font-size: 11px;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.round-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+  font-size: 11px;
+  min-height: 18px;
+}
+
+.round-card-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: #15803d;
+  font-size: 11px;
+}
+
+.round-card-viewing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  font-size: 9.5px;
+  font-weight: 700;
+  background: #0b4d37;
+  color: #ffffff;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.round-card-loading {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #b45309;
+}
+

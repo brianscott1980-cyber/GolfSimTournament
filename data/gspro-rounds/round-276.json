@@ -1,0 +1,349 @@
+{
+  "isGSProRunning": false,
+  "isRoundActive": false,
+  "isMatchFinished": true,
+  "statusMessage": "Match completed on 17 Oct 2026 at 19:26 · 18 holes recorded",
+  "source": "idle",
+  "lastUpdated": "2026-10-22T12:35:40.266Z",
+  "courseKey": "topoftherock_gsp",
+  "courseName": "Top of the Rock",
+  "courseLocation": "Ridgedale, MO",
+  "coursePar": 54,
+  "selectedTee": "Blue",
+  "totalYards": 2202,
+  "courseHoles": [
+    {
+      "hole": 1,
+      "par": 3,
+      "strokeIndex": 8,
+      "distanceYards": 145
+    },
+    {
+      "hole": 2,
+      "par": 3,
+      "strokeIndex": 9,
+      "distanceYards": 91
+    },
+    {
+      "hole": 3,
+      "par": 3,
+      "strokeIndex": 1,
+      "distanceYards": 139
+    },
+    {
+      "hole": 4,
+      "par": 3,
+      "strokeIndex": 3,
+      "distanceYards": 142
+    },
+    {
+      "hole": 5,
+      "par": 3,
+      "strokeIndex": 2,
+      "distanceYards": 90
+    },
+    {
+      "hole": 6,
+      "par": 3,
+      "strokeIndex": 5,
+      "distanceYards": 91
+    },
+    {
+      "hole": 7,
+      "par": 3,
+      "strokeIndex": 7,
+      "distanceYards": 132
+    },
+    {
+      "hole": 8,
+      "par": 3,
+      "strokeIndex": 4,
+      "distanceYards": 164
+    },
+    {
+      "hole": 9,
+      "par": 3,
+      "strokeIndex": 6,
+      "distanceYards": 121
+    },
+    {
+      "hole": 10,
+      "par": 3,
+      "strokeIndex": 17,
+      "distanceYards": 145
+    },
+    {
+      "hole": 11,
+      "par": 3,
+      "strokeIndex": 18,
+      "distanceYards": 86
+    },
+    {
+      "hole": 12,
+      "par": 3,
+      "strokeIndex": 10,
+      "distanceYards": 144
+    },
+    {
+      "hole": 13,
+      "par": 3,
+      "strokeIndex": 13,
+      "distanceYards": 111
+    },
+    {
+      "hole": 14,
+      "par": 3,
+      "strokeIndex": 16,
+      "distanceYards": 105
+    },
+    {
+      "hole": 15,
+      "par": 3,
+      "strokeIndex": 14,
+      "distanceYards": 99
+    },
+    {
+      "hole": 16,
+      "par": 3,
+      "strokeIndex": 12,
+      "distanceYards": 123
+    },
+    {
+      "hole": 17,
+      "par": 3,
+      "strokeIndex": 15,
+      "distanceYards": 152
+    },
+    {
+      "hole": 18,
+      "par": 3,
+      "strokeIndex": 11,
+      "distanceYards": 122
+    }
+  ],
+  "holesCompleted": 9,
+  "currentHole": 9,
+  "matchState": "Final · 9 Holes",
+  "formatName": "Stroke Play",
+  "teams": [
+    {
+      "id": "player-1",
+      "name": "Brian Scott",
+      "playerNames": [
+        "Brian Scott"
+      ],
+      "handicap": 0,
+      "scores": [
+        {
+          "hole": 1,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 8,
+          "distanceYards": 145,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 2,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 9,
+          "distanceYards": 91,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 3,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 1,
+          "distanceYards": 139,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 4,
+          "gross": 7,
+          "net": 7,
+          "par": 3,
+          "strokeIndex": 3,
+          "distanceYards": 142,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 5,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 2,
+          "distanceYards": 90,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 6,
+          "gross": 6,
+          "net": 6,
+          "par": 3,
+          "strokeIndex": 5,
+          "distanceYards": 91,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 7,
+          "gross": 3,
+          "net": 3,
+          "par": 3,
+          "strokeIndex": 7,
+          "distanceYards": 132,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 8,
+          "gross": 4,
+          "net": 4,
+          "par": 3,
+          "strokeIndex": 4,
+          "distanceYards": 164,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 9,
+          "gross": 5,
+          "net": 5,
+          "par": 3,
+          "strokeIndex": 6,
+          "distanceYards": 121,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 10,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 17,
+          "distanceYards": 145,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 11,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 18,
+          "distanceYards": 86,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 12,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 10,
+          "distanceYards": 144,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 13,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 13,
+          "distanceYards": 111,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 14,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 16,
+          "distanceYards": 105,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 15,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 14,
+          "distanceYards": 99,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 16,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 12,
+          "distanceYards": 123,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 17,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 15,
+          "distanceYards": 152,
+          "handicapStrokes": 0
+        },
+        {
+          "hole": 18,
+          "gross": 0,
+          "net": 0,
+          "par": 3,
+          "strokeIndex": 11,
+          "distanceYards": 122,
+          "handicapStrokes": 0
+        }
+      ],
+      "grossTotal": 41,
+      "netTotal": 41,
+      "grossToPar": 14,
+      "grossToParLabel": "+14",
+      "netToPar": 14,
+      "netToParLabel": "+14"
+    }
+  ],
+  "pinContests": [
+    {
+      "hole": 8,
+      "type": "closest_in_2",
+      "awardType": "team",
+      "title": "Closest Team in 2 · Hole 8",
+      "leader": {
+        "playerName": "Brian Scott",
+        "teamName": "Brian Scott",
+        "playerNames": [
+          "Brian Scott"
+        ],
+        "distanceFeet": "10 ft 1 in"
+      }
+    },
+    {
+      "hole": 17,
+      "type": "closest_to_pin",
+      "awardType": "solo",
+      "title": "Closest to Pin · Hole 17",
+      "leader": {
+        "playerName": "Brian Scott",
+        "teamName": "Team B",
+        "playerNames": [
+          "Brian Scott"
+        ],
+        "distanceFeet": "5 ft 6 in"
+      }
+    }
+  ],
+  "telemetry": {
+    "longestDrive": {
+      "playerId": "brian-scott",
+      "playerName": "Brian Scott",
+      "distance": 284.5,
+      "carryDistance": 268.2,
+      "hole": 9,
+      "ballSpeed": 161.4
+    },
+    "totalShots": 36
+  }
+}
