@@ -23,6 +23,7 @@ import {
   Loader2,
 } from "lucide-react";
 import PlayerAvatar from "@/components/player-avatar";
+import ThemeToggle from "@/components/theme-toggle";
 import type { GSProLiveState } from "@/lib/gspro-live";
 import { tournamentHref } from "@/lib/navigation";
 import { demo, type Tournament, standings } from "@/lib/golf";
@@ -52,16 +53,53 @@ export default function GSProLiveCard({
   const [loadingRoundId, setLoadingRoundId] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const [historyList, setHistoryList] = useState<any[]>(() => liveData.previousRounds || []);
+  const isOpposingTeamMatch = (r: any) =>
+    (r.holesCount || 0) >= 18 &&
+    Boolean(r.teamsSummary && r.teamsSummary.includes(" vs "));
+
+  const [historyList, setHistoryList] = useState<any[]>(() =>
+    (liveData.previousRounds || []).filter(isOpposingTeamMatch)
+  );
+
+  const displayedHistoryList = historyList.filter(isOpposingTeamMatch);
+
+  // If there is a live round in progress, always default to viewing the live round
+  useEffect(() => {
+    if (liveData.isRoundActive) {
+      setSelectedRoundId(null);
+      setSelectedRoundState(null);
+    }
+  }, [liveData.isRoundActive]);
+
+  // Lock body scroll and listen for Escape key in fullscreen mode
+  useEffect(() => {
+    if (fullscreen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          onToggleFullscreen();
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [fullscreen, onToggleFullscreen]);
 
   useEffect(() => {
     if (liveData.previousRounds && liveData.previousRounds.length > 0) {
-      setHistoryList(liveData.previousRounds);
+      setHistoryList(liveData.previousRounds.filter(isOpposingTeamMatch));
     } else if (historyList.length === 0) {
       fetch("/api/gspro/rounds")
         .then((r) => r.json())
         .then((items) => {
-          if (Array.isArray(items)) setHistoryList(items);
+          if (Array.isArray(items)) {
+            setHistoryList(items.filter(isOpposingTeamMatch));
+          }
         })
         .catch(() => {});
     }
@@ -211,6 +249,7 @@ export default function GSProLiveCard({
           </div>
         </div>
         <div className="live-scorecard-actions">
+          <ThemeToggle />
           <button
             type="button"
             className="button outline icon-only live-fullscreen-btn"
@@ -239,8 +278,8 @@ export default function GSProLiveCard({
         </div>
       </div>
 
-      {/* Horizontal Previous Rounds Explorer Cards */}
-      {historyList.length > 0 && (
+      {/* Horizontal Previous Rounds Explorer Cards (Hidden in Fullscreen mode or when a live round is active) */}
+      {!fullscreen && !liveData.isRoundActive && displayedHistoryList.length > 0 && (
         <div className="previous-rounds-explorer-wrap">
           <div className="previous-rounds-bar">
             <div className="previous-rounds-info">
@@ -248,13 +287,11 @@ export default function GSProLiveCard({
                 <History size={13} />
                 <span>Previous Rounds Explorer</span>
                 <span className="previous-rounds-count">
-                  ({historyList.length} past match{historyList.length === 1 ? "" : "es"} saved)
+                  ({displayedHistoryList.length} completed match{displayedHistoryList.length === 1 ? "" : "es"})
                 </span>
               </div>
               <span className="previous-rounds-subtitle">
-                {liveData.isRoundActive
-                  ? "Live match in progress · Select a past match card to review previous rounds"
-                  : "Select any past match below to explore its battle graph, Augusta standings & scorecards"}
+                Select any past match below to explore its battle graph, Augusta standings & scorecards
               </span>
             </div>
             <div className="previous-rounds-controls">
@@ -280,44 +317,7 @@ export default function GSProLiveCard({
           </div>
 
           <div className="previous-rounds-scroll-area" ref={scrollContainerRef}>
-            {liveData.isRoundActive && (
-              <button
-                type="button"
-                className={`round-explorer-card live-card ${isViewingLive ? "active" : ""}`}
-                onClick={() => {
-                  setSelectedRoundId(null);
-                  setSelectedRoundState(null);
-                }}
-              >
-                <div className="round-card-top">
-                  <span className="round-live-pill">
-                    <span className="live-dot" /> LIVE MATCH
-                  </span>
-                  <span className="round-card-status-badge">
-                    Hole {liveData.currentHole}/18
-                  </span>
-                </div>
-                <div className="round-card-course" title={liveData.courseName}>
-                  {liveData.courseName || "Currahee Club"}
-                </div>
-                <div className="round-card-teams" title={liveData.teams.map((t) => t.name).join(" vs ")}>
-                  {liveData.teams.map((t) => t.name).join(" vs ")}
-                </div>
-                <div className="round-card-footer">
-                  <div className="round-card-score">
-                    <Zap size={11} style={{ color: "#ca8a04" }} />
-                    <span>{liveData.matchState || "In Progress"}</span>
-                  </div>
-                  {isViewingLive && (
-                    <span className="round-card-viewing-badge">
-                      <Check size={10} /> Active
-                    </span>
-                  )}
-                </div>
-              </button>
-            )}
-
-            {historyList.map((r) => {
+            {displayedHistoryList.map((r) => {
               const isSelected = selectedRoundId === r.id;
               const isLoading = loadingRoundId === r.id;
 
@@ -338,6 +338,11 @@ export default function GSProLiveCard({
                   </div>
                   <div className="round-card-course" title={r.courseName}>
                     {r.courseName}
+                  </div>
+                  <div className="round-card-avatars">
+                    {(r.playerNames || []).map((name: string) => (
+                      <PlayerAvatar key={name} name={name} size={18} className="small round-card-avatar" />
+                    ))}
                   </div>
                   <div className="round-card-teams" title={r.teamsSummary}>
                     {r.teamsSummary}
@@ -486,10 +491,21 @@ export default function GSProLiveCard({
                   const isActive = h.hole === activeHoleNumber;
                   const cellClass = `live-score-cell ${isActive ? "active-hole-col" : ""}`;
 
-                  if (!scoreObj) {
+                  // If hole is not played yet (gross is 0, undefined, or missing)
+                  if (!scoreObj || !scoreObj.gross || scoreObj.gross <= 0) {
                     return (
                       <td key={h.hole} className={cellClass}>
                         <div className="live-cell-container">
+                          {scoreObj && scoreObj.handicapStrokes > 0 && (
+                            <span
+                              className="live-hcp-dots"
+                              title={`+${scoreObj.handicapStrokes} stroke given on SI ${h.strokeIndex}`}
+                            >
+                              {Array.from({ length: scoreObj.handicapStrokes }).map((_, i) => (
+                                <span key={i} className="live-hcp-pip" />
+                              ))}
+                            </span>
+                          )}
                           <span className="live-score-empty">—</span>
                         </div>
                       </td>
@@ -516,7 +532,9 @@ export default function GSProLiveCard({
                             className="live-hcp-dots"
                             title={`+${scoreObj.handicapStrokes} stroke given on SI ${h.strokeIndex}`}
                           >
-                            {"•".repeat(scoreObj.handicapStrokes)}
+                            {Array.from({ length: scoreObj.handicapStrokes }).map((_, i) => (
+                              <span key={i} className="live-hcp-pip" />
+                            ))}
                           </span>
                         )}
                         <span className={`masters-val ${badgeClass}`}>
@@ -574,11 +592,8 @@ export default function GSProLiveCard({
                   <span className="legend-shape double-bogey" /> Double Bogey+
                 </span>
                 <span className="live-legend-item">
-                  <span style={{ color: "#7d4833", fontWeight: 800, fontSize: 15 }}>•</span> Stroke given
+                  <span className="live-hcp-pip legend-pip" /> Stroke given
                 </span>
-              </div>
-              <div className="live-hcp-calc-explainer" style={{ marginTop: "6px" }}>
-                <strong>Handicaps:</strong> Team A (Brian & John) Net HCP -8 · Team B (Tony & Derek) Net HCP -3. Net totals shown with gross in parentheses.
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -705,7 +720,14 @@ export default function GSProLiveCard({
           {(() => {
             const teamA = data.teams[0];
             const teamB = data.teams[1];
-            const count = Math.min(teamA.scores.length, teamB.scores.length, 18);
+            // Only count holes that have actually been played (gross score > 0)
+            const count = Math.min(
+              teamA.scores.filter((s) => s.gross > 0).length,
+              teamB.scores.filter((s) => s.gross > 0).length,
+              18
+            );
+
+            if (count === 0) return null;
 
             // Calculate cumulative scores to par for both teams
             let cumNetA = 0;
@@ -831,7 +853,7 @@ export default function GSProLiveCard({
                 {/* Header with Mode Toggle & Rosters */}
                 <div className="battle-chart-header">
                   <div className="battle-chart-title">
-                    <Swords size={13} style={{ color: "#0b4d37" }} /> Match Battle Progression · {battleMode === "net" ? "Net" : "Gross"} to Par
+                    <Swords size={13} className="battle-swords-icon" /> Match Battle Progression · {battleMode === "net" ? "Net" : "Gross"} to Par
                   </div>
 
                   <div className="battle-controls">
@@ -895,12 +917,12 @@ export default function GSProLiveCard({
                   >
                     <defs>
                       <linearGradient id="battleGradA" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#0b4d37" stopOpacity="0.22" />
-                        <stop offset="100%" stopColor="#0b4d37" stopOpacity="0.0" />
+                        <stop offset="0%" stopColor="var(--battle-line-a, #0b4d37)" stopOpacity="0.25" />
+                        <stop offset="100%" stopColor="var(--battle-line-a, #0b4d37)" stopOpacity="0.0" />
                       </linearGradient>
                       <linearGradient id="battleGradB" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2563eb" stopOpacity="0.18" />
-                        <stop offset="100%" stopColor="#2563eb" stopOpacity="0.0" />
+                        <stop offset="0%" stopColor="var(--battle-line-b, #2563eb)" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="var(--battle-line-b, #2563eb)" stopOpacity="0.0" />
                       </linearGradient>
                       <filter id="battleShadow" x="-10%" y="-10%" width="120%" height="120%">
                         <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.12" />
@@ -914,7 +936,7 @@ export default function GSProLiveCard({
                         y={paddingTop}
                         width={32}
                         height={plotBottom - paddingTop}
-                        fill="#fef3c7"
+                        fill="var(--battle-active-col, #fef3c7)"
                         fillOpacity="0.4"
                         rx="4"
                       />
@@ -930,7 +952,7 @@ export default function GSProLiveCard({
                           y1={paddingTop}
                           x2={x}
                           y2={plotBottom}
-                          stroke="#f1f5f9"
+                          stroke="var(--battle-grid-subtle, #f1f5f9)"
                           strokeWidth="1"
                         />
                       );
@@ -943,10 +965,10 @@ export default function GSProLiveCard({
                         y1={paddingTop}
                         x2={getX(hoveredHoleIndex)}
                         y2={plotBottom + 16}
-                        stroke="#0f172a"
+                        stroke="var(--battle-hairline, #0f172a)"
                         strokeWidth="1"
                         strokeDasharray="3 3"
-                        strokeOpacity="0.5"
+                        strokeOpacity="0.6"
                       />
                     )}
 
@@ -961,7 +983,7 @@ export default function GSProLiveCard({
                             y1={y}
                             x2={paddingLeft + innerWidth}
                             y2={y}
-                            stroke={isEven ? "#94a3b8" : "#f1f5f9"}
+                            stroke={isEven ? "var(--battle-grid-even, #94a3b8)" : "var(--battle-grid-subtle, #f1f5f9)"}
                             strokeWidth={isEven ? "1.2" : "0.7"}
                             strokeDasharray={isEven ? "4 3" : undefined}
                           />
@@ -971,7 +993,7 @@ export default function GSProLiveCard({
                             textAnchor="end"
                             fontSize={isEven ? "8" : "7"}
                             fontWeight={isEven ? "700" : "500"}
-                            fill={isEven ? "#1e293b" : val < 0 ? "#065f46" : "#64748b"}
+                            fill={isEven ? "var(--battle-axis-even, #1e293b)" : val < 0 ? "var(--battle-axis-under, #065f46)" : "var(--battle-axis-over, #64748b)"}
                           >
                             {isEven ? "E (Par)" : val > 0 ? `+${val}` : `${val}`}
                           </text>
@@ -986,7 +1008,7 @@ export default function GSProLiveCard({
                       textAnchor="end"
                       fontSize="6.5"
                       fontWeight="700"
-                      fill="#065f46"
+                      fill="var(--battle-axis-under, #065f46)"
                     >
                       ▲ UNDER
                     </text>
@@ -996,7 +1018,7 @@ export default function GSProLiveCard({
                       textAnchor="end"
                       fontSize="6.5"
                       fontWeight="700"
-                      fill="#64748b"
+                      fill="var(--battle-axis-over, #64748b)"
                     >
                       ▼ OVER
                     </text>
@@ -1006,7 +1028,7 @@ export default function GSProLiveCard({
                     <path
                       d={pathDataB}
                       fill="none"
-                      stroke="#2563eb"
+                      stroke="var(--battle-line-b, #2563eb)"
                       strokeWidth="2.2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -1017,7 +1039,7 @@ export default function GSProLiveCard({
                     <path
                       d={pathDataA}
                       fill="none"
-                      stroke="#0b4d37"
+                      stroke="var(--battle-line-a, #0b4d37)"
                       strokeWidth="2.4"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -1054,16 +1076,16 @@ export default function GSProLiveCard({
                                 cx={x}
                                 cy={yB}
                                 r={isHovered ? 4.8 : 3.6}
-                                fill="#2563eb"
-                                stroke="#ffffff"
+                                fill="var(--battle-line-b, #2563eb)"
+                                stroke="var(--battle-node-stroke, #ffffff)"
                                 strokeWidth="1.2"
                               />
                               <circle
                                 cx={x}
                                 cy={yA}
                                 r={isHovered ? 3 : 2}
-                                fill="#0b4d37"
-                                stroke="#ffffff"
+                                fill="var(--battle-line-a, #0b4d37)"
+                                stroke="var(--battle-node-stroke, #ffffff)"
                                 strokeWidth="1"
                               />
                             </g>
@@ -1074,16 +1096,16 @@ export default function GSProLiveCard({
                                 cx={x}
                                 cy={yB}
                                 r={isHovered ? 4 : 2.5}
-                                fill="#2563eb"
-                                stroke="#ffffff"
+                                fill="var(--battle-line-b, #2563eb)"
+                                stroke="var(--battle-node-stroke, #ffffff)"
                                 strokeWidth="1.2"
                               />
                               <circle
                                 cx={x}
                                 cy={yA}
                                 r={isHovered ? 4 : 2.5}
-                                fill="#0b4d37"
-                                stroke="#ffffff"
+                                fill="var(--battle-line-a, #0b4d37)"
+                                stroke="var(--battle-node-stroke, #ffffff)"
                                 strokeWidth="1.2"
                               />
                             </g>
@@ -1099,7 +1121,7 @@ export default function GSProLiveCard({
                                 width={20}
                                 height={14}
                                 rx="2"
-                                fill="#0b4d37"
+                                fill="var(--battle-badge-a, #0b4d37)"
                               />
                               <text
                                 x={x + 15}
@@ -1119,7 +1141,7 @@ export default function GSProLiveCard({
                                 width={20}
                                 height={14}
                                 rx="2"
-                                fill="#2563eb"
+                                fill="var(--battle-badge-b, #2563eb)"
                               />
                               <text
                                 x={x + 15}
@@ -1143,7 +1165,7 @@ export default function GSProLiveCard({
                       y1={plotBottom}
                       x2={paddingLeft + innerWidth}
                       y2={plotBottom}
-                      stroke="#cbd5e1"
+                      stroke="var(--battle-axis-line, #cbd5e1)"
                       strokeWidth="1"
                     />
 
@@ -1176,7 +1198,7 @@ export default function GSProLiveCard({
                             y1={plotBottom}
                             x2={x}
                             y2={plotBottom + 3}
-                            stroke={isActive ? "#0b4d37" : "#cbd5e1"}
+                            stroke={isActive ? "var(--battle-line-a, #0b4d37)" : "var(--battle-axis-line, #cbd5e1)"}
                             strokeWidth={isActive ? "1.5" : "0.8"}
                           />
 
@@ -1187,7 +1209,7 @@ export default function GSProLiveCard({
                             textAnchor="middle"
                             fontSize="7.5"
                             fontWeight={isActive ? "800" : isHovered ? "700" : "500"}
-                            fill={isActive ? "#0b4d37" : isHovered ? "#0f172a" : "#64748b"}
+                            fill={isActive ? "var(--battle-line-a, #0b4d37)" : isHovered ? "var(--battle-text-hover, #0f172a)" : "var(--battle-text-muted, #64748b)"}
                           >
                             H{num}
                           </text>
@@ -1328,7 +1350,7 @@ export default function GSProLiveCard({
 
                     {/* Player Info */}
                     <div className="masters-col-player">
-                      <PlayerAvatar name={player.name} size={20} />
+                      <PlayerAvatar name={player.name} size={24} />
                       <div className="masters-player-text">
                         <span className="masters-player-name">{player.name.toUpperCase()}</span>
                         <span className="masters-player-sub">

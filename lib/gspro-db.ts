@@ -121,7 +121,13 @@ function loadStaticRoundsIndex(): GSProHistoricalRoundSummary[] {
   try {
     const indexPath = path.join(STATIC_ROUNDS_DIR, "rounds-index.json");
     if (fs.existsSync(indexPath)) {
-      return JSON.parse(fs.readFileSync(indexPath, "utf8"));
+      const items: GSProHistoricalRoundSummary[] = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+      return items.filter(
+        (r) =>
+          r.holesCount >= 18 &&
+          r.teamsSummary &&
+          r.teamsSummary.includes(" vs ")
+      );
     }
   } catch {}
   return [];
@@ -193,16 +199,57 @@ export function getGSProHistoricalRoundsList(limit = 24): GSProHistoricalRoundSu
         ...players.map((p: any) => p.scoreRaw.filter((s: number) => s > 0).length)
       );
 
-      // Only include matches where at least 6 holes were played
-      if (holesPlayed < 6) continue;
+      // Only include completed matches (18 holes)
+      if (holesPlayed < 18) continue;
 
       const { dateLabel, timeLabel } = formatDateLabels(r.DateCreated);
       const courseMeta = readGSProCourseMetadata(r.CourseName);
       const courseName = courseMeta.courseName || formatCleanCourseName(r.CourseName);
 
-      // Analyze format and teams
-      const isFourball = players.length >= 4;
-      const isTwoPlayer = players.length === 2;
+      // Detect team colors / team grouping in GSPro data
+      const extractTeamKey = (p: any): string | null => {
+        const val =
+          p.TeamColor ??
+          p.teamColor ??
+          p.Color ??
+          p.color ??
+          p.Team ??
+          p.team ??
+          p.TeamId ??
+          p.team_id;
+        if (val !== undefined && val !== null && String(val).trim() !== "") {
+          return String(val).trim().toLowerCase();
+        }
+        return null;
+      };
+
+      const teamGroups = new Map<string, any[]>();
+      let hasExplicitTeams = false;
+      for (const p of players) {
+        const key = extractTeamKey(p);
+        if (key !== null) {
+          hasExplicitTeams = true;
+          if (!teamGroups.has(key)) teamGroups.set(key, []);
+          teamGroups.get(key)!.push(p);
+        }
+      }
+
+      // Check if players are on 1 unified team together (e.g. Royal Hawaiian 3-player scramble or shared team color)
+      const allShareIdenticalScores =
+        players.length > 1 &&
+        players.slice(1).every((p: any) =>
+          p.scoreRaw.every((s: number, idx: number) => s === players[0].scoreRaw[idx])
+        );
+
+      const isSingleTeamTogether =
+        (hasExplicitTeams && teamGroups.size === 1) ||
+        (players.length === 3 && (allShareIdenticalScores || hasExplicitTeams || r.CourseName.toLowerCase().includes("royal_hawaiian")));
+
+      const isTwoTeamScramble =
+        (hasExplicitTeams && teamGroups.size === 2) ||
+        (!hasExplicitTeams && players.length >= 4);
+
+      const isTwoPlayer = !isSingleTeamTogether && !isTwoTeamScramble && players.length === 2;
 
       let formatName = "Stroke Play";
       let teamsSummary = "";
@@ -211,26 +258,56 @@ export function getGSProHistoricalRoundsList(limit = 24): GSProHistoricalRoundSu
       let winnerName: string | undefined;
       let winningMargin: string | undefined;
 
-      if (isFourball) {
-        formatName = "2v2 Scramble";
-        const t1 = `${players[0].Name} & ${players[1].Name}`;
-        const t2 = `${players[2].Name} & ${players[3].Name}`;
+      if (isSingleTeamTogether) {
+        formatName = `${players.length}-Player Scramble`;
+        const names = players.map((p: any) => p.Name);
+        teamsSummary =
+          names.length > 2
+            ? `${names.slice(0, -1).join(", ")} & ${names[names.length - 1]}`
+            : names.join(" & ");
+
+        let teamGross = 0;
+        for (let h = 0; h < holesPlayed; h++) {
+          const minGross = Math.min(
+            ...players.map((p: any) => (p.scoreRaw[h] > 0 ? p.scoreRaw[h] : 99))
+          );
+          if (minGross < 99) teamGross += minGross;
+        }
+        const par = courseMeta.par || 72;
+        const diff = teamGross - par;
+        const diffLabel = diff > 0 ? `+${diff}` : diff === 0 ? "E" : `${diff}`;
+        scoreSummary = `Team: ${teamGross} (${diffLabel})`;
+        matchState = `${teamsSummary} shot ${teamGross} (${diffLabel})`;
+        winnerName = teamsSummary;
+        winningMargin = diff < 0 ? `${Math.abs(diff)} Under Par` : `${diffLabel} Par`;
+      } else if (isTwoTeamScramble) {
+        const teamsArray =
+          hasExplicitTeams && teamGroups.size === 2
+            ? Array.from(teamGroups.values())
+            : [[players[0], players[1]], [players[2], players[3]]];
+        const team1 = teamsArray[0];
+        const team2 = teamsArray[1];
+        formatName = `${team1.length}v${team2.length} Scramble`;
+        const t1 = team1.map((p: any) => p.Name).join(" & ");
+        const t2 = team2.map((p: any) => p.Name).join(" & ");
         teamsSummary = `${t1} vs ${t2}`;
 
-        const score1 = players[0].scoreRaw.reduce((a: number, b: number) => a + b, 0);
-        const score2 = players[2].scoreRaw.reduce((a: number, b: number) => a + b, 0);
+        let score1 = 0;
+        let score2 = 0;
+        for (let h = 0; h < holesPlayed; h++) {
+          const m1 = Math.min(...team1.map((p: any) => (p.scoreRaw[h] > 0 ? p.scoreRaw[h] : 99)));
+          const m2 = Math.min(...team2.map((p: any) => (p.scoreRaw[h] > 0 ? p.scoreRaw[h] : 99)));
+          if (m1 < 99) score1 += m1;
+          if (m2 < 99) score2 += m2;
+        }
         scoreSummary = `${score1} - ${score2}`;
 
-        // Net scores
-        const net1 = players[0].score.reduce((a: number, b: number) => a + b, 0);
-        const net2 = players[2].score.reduce((a: number, b: number) => a + b, 0);
-
-        if (score1 < score2 || net1 < net2) {
+        if (score1 < score2) {
           winnerName = t1;
           const diff = Math.abs(score1 - score2);
           winningMargin = diff > 0 ? `${diff} Shot${diff > 1 ? "s" : ""}` : "1 UP";
           matchState = `${t1} def. ${t2} (${winningMargin})`;
-        } else if (score2 < score1 || net2 < net1) {
+        } else if (score2 < score1) {
           winnerName = t2;
           const diff = Math.abs(score2 - score1);
           winningMargin = diff > 0 ? `${diff} Shot${diff > 1 ? "s" : ""}` : "1 UP";
@@ -269,6 +346,11 @@ export function getGSProHistoricalRoundsList(limit = 24): GSProHistoricalRoundSu
         const bestScore = best.scoreRaw.reduce((a: number, b: number) => a + b, 0);
         scoreSummary = `Leader: ${bestScore}`;
         matchState = `${best.Name} shot ${bestScore}`;
+      }
+
+      // Only include matches that had at least 2 opposing teams/sides
+      if (isSingleTeamTogether || !teamsSummary || !teamsSummary.includes(" vs ")) {
+        continue;
       }
 
       results.push({
@@ -346,17 +428,107 @@ export function getGSProHistoricalRoundState(roundId: number): GSProLiveState | 
       ...players.map((p: any) => p.scoreRaw.filter((s: number) => s > 0).length)
     );
 
-    const isFourball = players.length >= 4;
-    const isTwoPlayer = players.length === 2;
+    const extractTeamKey = (p: any): string | null => {
+      const val =
+        p.TeamColor ??
+        p.teamColor ??
+        p.Color ??
+        p.color ??
+        p.Team ??
+        p.team ??
+        p.TeamId ??
+        p.team_id;
+      if (val !== undefined && val !== null && String(val).trim() !== "") {
+        return String(val).trim().toLowerCase();
+      }
+      return null;
+    };
+
+    const teamGroups = new Map<string, any[]>();
+    let hasExplicitTeams = false;
+    for (const p of players) {
+      const key = extractTeamKey(p);
+      if (key !== null) {
+        hasExplicitTeams = true;
+        if (!teamGroups.has(key)) teamGroups.set(key, []);
+        teamGroups.get(key)!.push(p);
+      }
+    }
+
+    const allShareIdenticalScores =
+      players.length > 1 &&
+      players.slice(1).every((p: any) =>
+        p.scoreRaw.every((s: number, idx: number) => s === players[0].scoreRaw[idx])
+      );
+
+    const isSingleTeamTogether =
+      (hasExplicitTeams && teamGroups.size === 1) ||
+      (players.length === 3 && (allShareIdenticalScores || hasExplicitTeams || row.CourseName.toLowerCase().includes("royal_hawaiian")));
+
+    const isTwoTeamScramble =
+      (hasExplicitTeams && teamGroups.size === 2) ||
+      (!hasExplicitTeams && players.length >= 4);
+
+    const isTwoPlayer = !isSingleTeamTogether && !isTwoTeamScramble && players.length === 2;
 
     const teams: GSProTeamScorecardRow[] = [];
+    let formatName = "Stroke Play";
 
-    if (isFourball) {
-      // 2v2 Scramble
-      const pA1 = players[0];
-      const pA2 = players[1];
-      const pB1 = players[2];
-      const pB2 = players[3];
+    if (isSingleTeamTogether) {
+      formatName = `${players.length}-Player Scramble`;
+      const names = players.map((p: any) => p.Name);
+      const teamTitle =
+        names.length > 2
+          ? `${names.slice(0, -1).join(", ")} & ${names[names.length - 1]}`
+          : names.join(" & ");
+
+      const scores: GSProHoleScore[] = courseMeta.holesList.map((hInfo, idx) => {
+        const rawScores = players
+          .map((p: any) => p.scoreRaw?.[idx] || 0)
+          .filter((s: number) => s > 0);
+        const gross = rawScores.length > 0 ? Math.min(...rawScores) : 0;
+        return {
+          hole: hInfo.hole,
+          gross,
+          net: gross,
+          par: hInfo.par,
+          strokeIndex: hInfo.strokeIndex,
+          distanceYards: hInfo.distanceYards,
+          handicapStrokes: 0,
+        };
+      });
+
+      const completedScores = scores.filter((s) => s.gross > 0);
+      const grossTotal = completedScores.reduce((acc, s) => acc + s.gross, 0);
+      const parCompleted = completedScores.reduce((acc, s) => acc + s.par, 0);
+      const grossToPar = grossTotal - parCompleted;
+      const formatToPar = (diff: number) => (diff === 0 ? "E" : diff > 0 ? `+${diff}` : `${diff}`);
+
+      teams.push({
+        id: "team-single",
+        name: teamTitle,
+        playerNames: players.map((p: any) => resolvePlayerFullName(p.Name)),
+        handicap: 0,
+        scores,
+        grossTotal,
+        netTotal: grossTotal,
+        grossToPar,
+        grossToParLabel: formatToPar(grossToPar),
+        netToPar: grossToPar,
+        netToParLabel: formatToPar(grossToPar),
+      });
+    } else if (isTwoTeamScramble) {
+      formatName = "2v2 Scramble";
+      const teamsArray =
+        hasExplicitTeams && teamGroups.size === 2
+          ? Array.from(teamGroups.values())
+          : [[players[0], players[1]], [players[2], players[3]]];
+      const team1 = teamsArray[0];
+      const team2 = teamsArray[1];
+      const pA1 = team1[0];
+      const pA2 = team1[1];
+      const pB1 = team2[0];
+      const pB2 = team2[1];
 
       const makeTeamRow = (
         id: string,
@@ -437,6 +609,7 @@ export function getGSProHistoricalRoundState(roundId: number): GSProLiveState | 
         )
       );
     } else if (isTwoPlayer) {
+      formatName = "1v1 Match Play";
       // 1v1
       players.forEach((p: any, idx: number) => {
         const teamId = idx === 0 ? "team-a" : "team-b";
@@ -535,7 +708,19 @@ export function getGSProHistoricalRoundState(roundId: number): GSProLiveState | 
     let matchResult: any = undefined;
     let matchState = `Final · ${holesPlayed} Holes`;
 
-    if (teamA && teamB) {
+    if (teams.length === 1) {
+      const singleTeam = teams[0];
+      const diff = singleTeam.grossToPar;
+      const diffLabel = diff > 0 ? `+${diff}` : diff === 0 ? "E" : `${diff}`;
+      matchState = `${singleTeam.name} shot ${singleTeam.grossTotal} (${diffLabel})`;
+      matchResult = {
+        isFinished: true,
+        winningMargin: diff < 0 ? `${Math.abs(diff)} Under Par` : `${diffLabel} Par`,
+        isTie: false,
+        scoreSummary: `Team Gross: ${singleTeam.grossTotal} (${diffLabel})`,
+        winningPlayers: singleTeam.playerNames,
+      };
+    } else if (teamA && teamB) {
       const aGross = teamA.grossTotal;
       const bGross = teamB.grossTotal;
       const aNet = teamA.netTotal;
@@ -630,11 +815,7 @@ export function getGSProHistoricalRoundState(roundId: number): GSProLiveState | 
       holesCompleted: holesPlayed,
       currentHole: Math.min(holesPlayed, 18),
       matchState,
-      formatName: isFourball
-        ? "2v2 Scramble (Team Stroke Play)"
-        : isTwoPlayer
-        ? "1v1 Match Play"
-        : "Stroke Play",
+      formatName: formatName || (isTwoTeamScramble ? "2v2 Scramble" : isTwoPlayer ? "1v1 Match Play" : "Stroke Play"),
       teams,
       pinContests,
       telemetry: {

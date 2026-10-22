@@ -10,6 +10,7 @@ import {
 } from "@/lib/navigation";
 import CourseCollection from "@/components/course-collection";
 import PlayerAvatar from "@/components/player-avatar";
+import ThemeToggle from "@/components/theme-toggle";
 import GSProLiveCard from "@/components/gspro-live-card";
 import {
   ArrowUpRight,
@@ -339,11 +340,14 @@ export default function Clubhouse({ route }: { route: ClubhouseRoute }) {
             Course collection
           </Link>
         </nav>
-        <button className="account" onClick={() => setModal("account")}>
-          <PlayerAvatar name={user ?? "Brian Scott"} className="small" />
-          <span>{user ? user.split("@")[0] : "Your clubhouse"}</span>
-          <ChevronDown size={14} />
-        </button>
+        <div className="header-actions">
+          <ThemeToggle />
+          <button className="account" onClick={() => setModal("account")}>
+            <PlayerAvatar name={user ?? "Brian Scott"} className="small" />
+            <span>{user ? user.split("@")[0] : "Your clubhouse"}</span>
+            <ChevronDown size={14} />
+          </button>
+        </div>
       </header>
       <main>
         {selected && !ready ? (

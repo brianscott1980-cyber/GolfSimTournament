@@ -4,12 +4,16 @@
   "isMatchFinished": true,
   "matchResult": {
     "isFinished": true,
-    "winningMargin": "All Square",
-    "isTie": true,
-    "scoreSummary": "70 - 70",
-    "winningPlayers": []
+    "winningMargin": "7 Under Par",
+    "isTie": false,
+    "scoreSummary": "Team Gross: 65 (-7)",
+    "winningPlayers": [
+      "Brian Scott",
+      "Tony McLean",
+      "John Colreavey"
+    ]
   },
-  "statusMessage": "Match completed on 23 Sept 2026 at 19:25 · 18 holes recorded",
+  "statusMessage": "Match completed on 23 Sept 2026 at 19:25 · 18 holes recorded · Scramble 65 (-7)",
   "source": "idle",
   "lastUpdated": "2026-10-22T12:35:40.273Z",
   "courseKey": "royal_hawaiian_gsp",
@@ -130,369 +134,15 @@
   ],
   "holesCompleted": 18,
   "currentHole": 18,
-  "matchState": "All Square (70 - 70)",
-  "formatName": "Stroke Play",
+  "matchState": "Brian, Tony & John shot 65 (-7)",
+  "formatName": "3-Player Scramble",
   "teams": [
     {
-      "id": "player-1",
-      "name": "Brian Scott",
+      "id": "team-hawaiian",
+      "name": "Brian, Tony & John",
       "playerNames": [
-        "Brian Scott"
-      ],
-      "handicap": 0,
-      "scores": [
-        {
-          "hole": 1,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 9,
-          "distanceYards": 305,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 2,
-          "gross": 3,
-          "net": 3,
-          "par": 3,
-          "strokeIndex": 15,
-          "distanceYards": 122,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 3,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 11,
-          "distanceYards": 366,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 4,
-          "gross": 4,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 3,
-          "distanceYards": 311,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 5,
-          "gross": 5,
-          "net": 3,
-          "par": 5,
-          "strokeIndex": 7,
-          "distanceYards": 456,
-          "handicapStrokes": 2
-        },
-        {
-          "hole": 6,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 13,
-          "distanceYards": 303,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 7,
-          "gross": 3,
-          "net": 2,
-          "par": 3,
-          "strokeIndex": 17,
-          "distanceYards": 162,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 8,
-          "gross": 5,
-          "net": 3,
-          "par": 5,
-          "strokeIndex": 5,
-          "distanceYards": 451,
-          "handicapStrokes": 2
-        },
-        {
-          "hole": 9,
-          "gross": 5,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 1,
-          "distanceYards": 349,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 10,
-          "gross": 4,
-          "net": 4,
-          "par": 5,
-          "strokeIndex": 18,
-          "distanceYards": 422,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 11,
-          "gross": 4,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 2,
-          "distanceYards": 390,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 12,
-          "gross": 3,
-          "net": 3,
-          "par": 3,
-          "strokeIndex": 10,
-          "distanceYards": 137,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 13,
-          "gross": 4,
-          "net": 2,
-          "par": 4,
-          "strokeIndex": 6,
-          "distanceYards": 297,
-          "handicapStrokes": 2
-        },
-        {
-          "hole": 14,
-          "gross": 4,
-          "net": 3,
-          "par": 5,
-          "strokeIndex": 4,
-          "distanceYards": 518,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 15,
-          "gross": 4,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 8,
-          "distanceYards": 288,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 16,
-          "gross": 3,
-          "net": 3,
-          "par": 3,
-          "strokeIndex": 12,
-          "distanceYards": 162,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 17,
-          "gross": 3,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 16,
-          "distanceYards": 285,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 18,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 14,
-          "distanceYards": 307,
-          "handicapStrokes": 0
-        }
-      ],
-      "grossTotal": 70,
-      "netTotal": 58,
-      "grossToPar": -2,
-      "grossToParLabel": "-2",
-      "netToPar": -14,
-      "netToParLabel": "-14"
-    },
-    {
-      "id": "player-2",
-      "name": "Tony McLean",
-      "playerNames": [
-        "Tony McLean"
-      ],
-      "handicap": 0,
-      "scores": [
-        {
-          "hole": 1,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 9,
-          "distanceYards": 305,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 2,
-          "gross": 3,
-          "net": 3,
-          "par": 3,
-          "strokeIndex": 15,
-          "distanceYards": 122,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 3,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 11,
-          "distanceYards": 366,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 4,
-          "gross": 4,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 3,
-          "distanceYards": 311,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 5,
-          "gross": 5,
-          "net": 3,
-          "par": 5,
-          "strokeIndex": 7,
-          "distanceYards": 456,
-          "handicapStrokes": 2
-        },
-        {
-          "hole": 6,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 13,
-          "distanceYards": 303,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 7,
-          "gross": 3,
-          "net": 2,
-          "par": 3,
-          "strokeIndex": 17,
-          "distanceYards": 162,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 8,
-          "gross": 5,
-          "net": 3,
-          "par": 5,
-          "strokeIndex": 5,
-          "distanceYards": 451,
-          "handicapStrokes": 2
-        },
-        {
-          "hole": 9,
-          "gross": 5,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 1,
-          "distanceYards": 349,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 10,
-          "gross": 4,
-          "net": 4,
-          "par": 5,
-          "strokeIndex": 18,
-          "distanceYards": 422,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 11,
-          "gross": 4,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 2,
-          "distanceYards": 390,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 12,
-          "gross": 3,
-          "net": 3,
-          "par": 3,
-          "strokeIndex": 10,
-          "distanceYards": 137,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 13,
-          "gross": 4,
-          "net": 2,
-          "par": 4,
-          "strokeIndex": 6,
-          "distanceYards": 297,
-          "handicapStrokes": 2
-        },
-        {
-          "hole": 14,
-          "gross": 4,
-          "net": 3,
-          "par": 5,
-          "strokeIndex": 4,
-          "distanceYards": 518,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 15,
-          "gross": 4,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 8,
-          "distanceYards": 288,
-          "handicapStrokes": 1
-        },
-        {
-          "hole": 16,
-          "gross": 3,
-          "net": 3,
-          "par": 3,
-          "strokeIndex": 12,
-          "distanceYards": 162,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 17,
-          "gross": 3,
-          "net": 3,
-          "par": 4,
-          "strokeIndex": 16,
-          "distanceYards": 285,
-          "handicapStrokes": 0
-        },
-        {
-          "hole": 18,
-          "gross": 4,
-          "net": 4,
-          "par": 4,
-          "strokeIndex": 14,
-          "distanceYards": 307,
-          "handicapStrokes": 0
-        }
-      ],
-      "grossTotal": 70,
-      "netTotal": 58,
-      "grossToPar": -2,
-      "grossToParLabel": "-2",
-      "netToPar": -14,
-      "netToParLabel": "-14"
-    },
-    {
-      "id": "player-3",
-      "name": "John Colreavey",
-      "playerNames": [
+        "Brian Scott",
+        "Tony McLean",
         "John Colreavey"
       ],
       "handicap": 0,
@@ -527,20 +177,20 @@
         {
           "hole": 4,
           "gross": 4,
-          "net": 3,
+          "net": 4,
           "par": 4,
           "strokeIndex": 3,
           "distanceYards": 311,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 5,
           "gross": 4,
-          "net": 3,
+          "net": 4,
           "par": 5,
           "strokeIndex": 7,
           "distanceYards": 456,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 6,
@@ -563,20 +213,20 @@
         {
           "hole": 8,
           "gross": 4,
-          "net": 3,
+          "net": 4,
           "par": 5,
           "strokeIndex": 5,
           "distanceYards": 451,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 9,
           "gross": 5,
-          "net": 4,
+          "net": 5,
           "par": 4,
           "strokeIndex": 1,
           "distanceYards": 349,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 10,
@@ -590,11 +240,11 @@
         {
           "hole": 11,
           "gross": 4,
-          "net": 3,
+          "net": 4,
           "par": 4,
           "strokeIndex": 2,
           "distanceYards": 390,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 12,
@@ -608,20 +258,20 @@
         {
           "hole": 13,
           "gross": 3,
-          "net": 2,
+          "net": 3,
           "par": 4,
           "strokeIndex": 6,
           "distanceYards": 297,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 14,
           "gross": 4,
-          "net": 3,
+          "net": 4,
           "par": 5,
           "strokeIndex": 4,
           "distanceYards": 518,
-          "handicapStrokes": 1
+          "handicapStrokes": 0
         },
         {
           "hole": 15,
@@ -661,11 +311,11 @@
         }
       ],
       "grossTotal": 65,
-      "netTotal": 58,
+      "netTotal": 65,
       "grossToPar": -7,
       "grossToParLabel": "-7",
-      "netToPar": -14,
-      "netToParLabel": "-14"
+      "netToPar": -7,
+      "netToParLabel": "-7"
     }
   ],
   "pinContests": [
